@@ -14,6 +14,11 @@ export interface TreeNodeProp {
   state?: 'select'
 }
 
+export interface VisualizerProp {
+  steps: (TreeNodeProp | null)[]
+  messages: string[]
+}
+
 export function buildTree(A: number[]): TreeNodeProp {
   const elements: ElementProp[] = A.map((value, index) => {
     return {value: value, elementIndex: index, visible: true}
@@ -97,6 +102,7 @@ export function generateSteps(root: TreeNodeProp | null) {
   const rootCopy: TreeNodeProp | null = root
   const generatedSteps: (TreeNodeProp | null)[] = []
   const messages: string[] = ['']
+  const visualizer: VisualizerProp = {steps: generatedSteps, messages: messages}
 
   const saveStep = () => {
     generatedSteps.push(structuredClone(root))
@@ -201,5 +207,5 @@ export function generateSteps(root: TreeNodeProp | null) {
   saveStep()
   generateStepsHelper(rootCopy)
 
-  return generatedSteps
+  return visualizer
 }

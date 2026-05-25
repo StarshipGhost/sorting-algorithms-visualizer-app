@@ -76,3 +76,44 @@ function toggleElementVisiblity(node : TreeNodeProp | null, id : number, index :
         node.A[index].visible = !node.A[index].visible
     }
 }
+
+export function generateSteps(root : TreeNodeProp | null) {
+    const rootCopy : TreeNodeProp | null = root;
+    const generatedSteps : (TreeNodeProp | null)[] = [];
+
+    const saveStep = () => {
+        generatedSteps.push(structuredClone(root))
+    }
+
+    const select = (current : TreeNodeProp) => {
+        current.state = 'select';
+        saveStep();
+    }
+
+    const split = (current : TreeNodeProp) => {
+        if (current.left && current.right) {
+            toggleNodeVisibility(current.left, current.left.id)
+            toggleNodeVisibility(current.right, current.right.id)
+            current.state = undefined;
+            saveStep();
+        } else {
+            current.state = undefined
+        }
+    }
+
+    function generateStepsHelper(current : TreeNodeProp | null) {
+        if (!current) return null;
+
+        select(current);
+        split(current);
+
+        generateStepsHelper(current.left)
+        generateStepsHelper(current.right)
+
+    }
+
+    saveStep();
+    generateStepsHelper(rootCopy);
+
+    return generatedSteps;
+}

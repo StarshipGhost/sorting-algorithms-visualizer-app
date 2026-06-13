@@ -2,7 +2,7 @@ export interface ElementProp {
   value: number
   elementIndex: number
   visible: boolean
-  state?: 'select min' | 'proccessed'
+  state?: 'highlight' | 'processing' | 'processed'
 }
 
 export interface TreeNodeProp {
@@ -11,12 +11,18 @@ export interface TreeNodeProp {
   left: TreeNodeProp | null
   right: TreeNodeProp | null
   visible: boolean
-  state?: 'select'
+}
+
+export interface ClassValueProps {
+  cellContainerClass : {highlight : string, processing : string, processed : string},
+  cellClass : string[];
+  animationClass : {slide: string, show : string, hidden : string, transition : string}
 }
 
 export interface VisualizerProp {
   steps: (TreeNodeProp | null)[]
   messages: string[]
+  classValues: ClassValueProps;
 }
 
 export function buildTree(A: number[]): TreeNodeProp {
@@ -27,12 +33,12 @@ export function buildTree(A: number[]): TreeNodeProp {
 
   const generateId = (root: TreeNodeProp | null) => {
     const queue: (TreeNodeProp | null)[] = [root]
-    let counter = 1
+    let id = 1
 
     while (queue.length > 0) {
       const node: TreeNodeProp | null | undefined = queue.shift()
       if (node) {
-        node.id = counter++
+        node.id = id++
         if (node.left) {
           queue.push(node.left)
         }
@@ -99,24 +105,33 @@ function sort(A: ElementProp[]) {
 }
 
 export function generateSteps(root: TreeNodeProp | null) {
+  const visible = 'opacity-100'
+  const hidden = 'opacity-0';
+  const transitionClass = `transition-[colors, opacity] duration-[400ms,400ms]`
+
+  const highlight = 'text-white bg-green-600/60'
+  const processed = 'bg-yellow-100 text-neutral-600'
+  const processing = 'bg-blue-400/20 text-neutral-600'
+
   const rootCopy: TreeNodeProp | null = root
   const generatedSteps: (TreeNodeProp | null)[] = []
   const messages: string[] = ['']
-  const visualizer: VisualizerProp = {steps: generatedSteps, messages: messages}
+  const visualizer: VisualizerProp = {steps: generatedSteps, messages: messages, classValues : {cellContainerClass : {highlight : highlight, processing : processing, processed : processed}, cellClass: [], animationClass: {slide: '', show : visible, hidden: hidden, transition: transitionClass}}}
 
   const saveStep = () => {
     generatedSteps.push(structuredClone(root))
   }
 
   const select = (node: TreeNodeProp) => {
-    node.state = 'select'
     if (node.left && node.right) {
+      node.A.forEach(n => n.state = 'highlight');
       messages.push('Select the entire array')
     } else {
+      node.A.forEach(n => n.state = 'processed');
       messages.push('An array of length 1 cannot be split, ready for merge')
     }
     saveStep()
-    node.state = undefined
+    node.A.forEach(n => n.state = undefined);
   }
 
   const split = (node: TreeNodeProp) => {
@@ -129,15 +144,14 @@ export function generateSteps(root: TreeNodeProp | null) {
   }
 
   const selectMin = (child: TreeNodeProp, index: number) => {
-    child.state = undefined
-    child.A[index].state = 'select min'
+    child.A[index].state = 'processing'
     saveStep()
   }
   const addSelectedToMergedArray = (node: TreeNodeProp, child: TreeNodeProp, index: number, mergedIndex: number) => {
     messages.push('Add the selected value to the sorted array')
     child.A[index].state = undefined
     toggleElementVisibility(child, child.id, index)
-    node.A[mergedIndex].state = 'select min'
+    node.A[mergedIndex].state = 'processing'
     toggleElementVisibility(node, node.id, mergedIndex)
     saveStep()
   }
@@ -145,7 +159,7 @@ export function generateSteps(root: TreeNodeProp | null) {
   const merge = (node: TreeNodeProp, child: TreeNodeProp, index: number, mergedIndex: number) => {
     selectMin(child, index)
     addSelectedToMergedArray(node, child, index, mergedIndex)
-    node.A[mergedIndex].state = 'proccessed'
+    node.A[mergedIndex].state = 'processed'
   }
 
   function generateStepsHelper(current: TreeNodeProp | null) {
@@ -158,8 +172,9 @@ export function generateSteps(root: TreeNodeProp | null) {
     generateStepsHelper(current.right)
 
     if (current.left && current.right) {
-      current.left.state = 'select'
-      current.right.state = 'select'
+      if (current.left.A.length === 1 ) current.left.A[0].state = 'highlight' 
+      if (current.right.A.length === 1) current.right.A[0].state = 'highlight'  
+        
       current.A.forEach((_e, index) => toggleElementVisibility(current, current.id, index))
       messages.push('Merge selected arrays back together in sorted order')
       saveStep()

@@ -1,42 +1,17 @@
-export interface ElementProp {
-  value: number
-  elementIndex: number
-  visible: boolean
-  state?: 'highlight' | 'processing' | 'processed'
-}
+import type {ElementProps, TreeNodeProps, VisualizerProps} from '../utils/types'
 
-export interface TreeNodeProp {
-  id: number
-  A: ElementProp[]
-  left: TreeNodeProp | null
-  right: TreeNodeProp | null
-  visible: boolean
-}
-
-export interface ClassValueProps {
-  cellContainerClass : {highlight : string, processing : string, processed : string},
-  cellClass : string[];
-  animationClass : {slide: string, show : string, hidden : string, transition : string}
-}
-
-export interface VisualizerProp {
-  steps: (TreeNodeProp | null)[]
-  messages: string[]
-  classValues: ClassValueProps;
-}
-
-export function buildTree(A: number[]): TreeNodeProp {
-  const elements: ElementProp[] = A.map((value, index) => {
-    return {value: value, elementIndex: index, visible: true}
+export function buildTree(A: number[]): TreeNodeProps {
+  const elements: ElementProps[] = A.map((value, index) => {
+    return {value: value, elementIndex: index, position: 0, visible: true}
   })
-  const root: TreeNodeProp = {id: -1, A: elements, left: null, right: null, visible: true}
+  const root: TreeNodeProps = {id: -1, visualizerData: {A: elements}, left: null, right: null, visible: true}
 
-  const generateId = (root: TreeNodeProp | null) => {
-    const queue: (TreeNodeProp | null)[] = [root]
+  const generateId = (root: TreeNodeProps | null) => {
+    const queue: (TreeNodeProps | null)[] = [root]
     let id = 1
 
     while (queue.length > 0) {
-      const node: TreeNodeProp | null | undefined = queue.shift()
+      const node: TreeNodeProps | null | undefined = queue.shift()
       if (node) {
         node.id = id++
         if (node.left) {
@@ -49,7 +24,7 @@ export function buildTree(A: number[]): TreeNodeProp {
     }
   }
 
-  function buildTreeHelper(A: ElementProp[], root: TreeNodeProp): TreeNodeProp | null {
+  function buildTreeHelper(A: ElementProps[], root: TreeNodeProps): TreeNodeProps | null {
     if (A.length <= 1) {
       return null
     }
@@ -58,9 +33,15 @@ export function buildTree(A: number[]): TreeNodeProp {
     const left = A.slice(0, middle)
     const right = A.slice(middle)
 
-    root.left = {id: -1, A: structuredClone(left), left: null, right: null, visible: false}
+    root.left = {id: -1, visualizerData: {A: structuredClone(left)}, left: null, right: null, visible: false}
     buildTreeHelper(left, root.left)
-    root.right = {id: -1, A: structuredClone(right), left: null, right: null, visible: false}
+    root.right = {
+      id: -1,
+      visualizerData: {A: structuredClone(right)},
+      left: null,
+      right: null,
+      visible: false,
+    }
     buildTreeHelper(right, root.right)
 
     return root
@@ -72,7 +53,7 @@ export function buildTree(A: number[]): TreeNodeProp {
   return root
 }
 
-function toggleNodeVisibility(node: TreeNodeProp | null, id: number) {
+function toggleNodeVisibility(node: TreeNodeProps | null, id: number) {
   if (!node) return
 
   if (node.id === id) {
@@ -80,15 +61,15 @@ function toggleNodeVisibility(node: TreeNodeProp | null, id: number) {
   }
 }
 
-function toggleElementVisibility(node: TreeNodeProp | null, id: number, index: number) {
+function toggleElementVisibility(node: TreeNodeProps | null, id: number, index: number) {
   if (!node) return
 
   if (node.id === id) {
-    node.A[index].visible = !node.A[index].visible
+    node.visualizerData.A[index].visible = !node.visualizerData.A[index].visible
   }
 }
 
-function sort(A: ElementProp[]) {
+function sort(A: ElementProps[]) {
   function swap(i: number, j: number) {
     const temp = A[i].value
     A[i].value = A[j].value
@@ -104,37 +85,45 @@ function sort(A: ElementProp[]) {
   }
 }
 
-export function generateSteps(root: TreeNodeProp | null) {
+export function generateSteps(root: TreeNodeProps | null) {
   const visible = 'opacity-100'
-  const hidden = 'opacity-0';
+  const hidden = 'opacity-0'
   const transitionClass = `transition-[colors, opacity] duration-[400ms,400ms]`
 
   const highlight = 'text-white bg-green-600/60'
   const processed = 'bg-yellow-100 text-neutral-600'
   const processing = 'bg-blue-400/20 text-neutral-600'
 
-  const rootCopy: TreeNodeProp | null = root
-  const generatedSteps: (TreeNodeProp | null)[] = []
+  const rootCopy: TreeNodeProps | null = root
+  const generatedSteps: (TreeNodeProps | null)[] = []
   const messages: string[] = ['']
-  const visualizer: VisualizerProp = {steps: generatedSteps, messages: messages, classValues : {cellContainerClass : {highlight : highlight, processing : processing, processed : processed}, cellClass: [], animationClass: {slide: '', show : visible, hidden: hidden, transition: transitionClass}}}
+  const visualizer: VisualizerProps = {
+    steps: generatedSteps,
+    messages: messages,
+    classValues: {
+      cellContainerClass: {highlight: highlight, processing: processing, processed: processed},
+      cellClass: [],
+      animationClass: {slide: '', visibility: {show: visible, hidden: hidden}, transition: transitionClass},
+    },
+  }
 
   const saveStep = () => {
     generatedSteps.push(structuredClone(root))
   }
 
-  const select = (node: TreeNodeProp) => {
+  const select = (node: TreeNodeProps) => {
     if (node.left && node.right) {
-      node.A.forEach(n => n.state = 'highlight');
+      node.visualizerData.A.forEach((n) => (n.state = 'highlight'))
       messages.push('Select the entire array')
     } else {
-      node.A.forEach(n => n.state = 'processed');
+      node.visualizerData.A.forEach((n) => (n.state = 'processed'))
       messages.push('An array of length 1 cannot be split, ready for merge')
     }
     saveStep()
-    node.A.forEach(n => n.state = undefined);
+    node.visualizerData.A.forEach((n) => (n.state = undefined))
   }
 
-  const split = (node: TreeNodeProp) => {
+  const split = (node: TreeNodeProps) => {
     if (node.left && node.right) {
       messages.push('Split the array as evenly as possible')
       toggleNodeVisibility(node.left, node.left.id)
@@ -143,26 +132,26 @@ export function generateSteps(root: TreeNodeProp | null) {
     }
   }
 
-  const selectMin = (child: TreeNodeProp, index: number) => {
-    child.A[index].state = 'processing'
+  const selectMin = (child: TreeNodeProps, index: number) => {
+    child.visualizerData.A[index].state = 'processing'
     saveStep()
   }
-  const addSelectedToMergedArray = (node: TreeNodeProp, child: TreeNodeProp, index: number, mergedIndex: number) => {
+  const addSelectedToMergedArray = (node: TreeNodeProps, child: TreeNodeProps, index: number, mergedIndex: number) => {
     messages.push('Add the selected value to the sorted array')
-    child.A[index].state = undefined
+    child.visualizerData.A[index].state = undefined
     toggleElementVisibility(child, child.id, index)
-    node.A[mergedIndex].state = 'processing'
+    node.visualizerData.A[mergedIndex].state = 'processing'
     toggleElementVisibility(node, node.id, mergedIndex)
     saveStep()
   }
 
-  const merge = (node: TreeNodeProp, child: TreeNodeProp, index: number, mergedIndex: number) => {
+  const merge = (node: TreeNodeProps, child: TreeNodeProps, index: number, mergedIndex: number) => {
     selectMin(child, index)
     addSelectedToMergedArray(node, child, index, mergedIndex)
-    node.A[mergedIndex].state = 'processed'
+    node.visualizerData.A[mergedIndex].state = 'processed'
   }
 
-  function generateStepsHelper(current: TreeNodeProp | null) {
+  function generateStepsHelper(current: TreeNodeProps | null) {
     if (!current) return
 
     select(current)
@@ -172,24 +161,24 @@ export function generateSteps(root: TreeNodeProp | null) {
     generateStepsHelper(current.right)
 
     if (current.left && current.right) {
-      if (current.left.A.length === 1 ) current.left.A[0].state = 'highlight' 
-      if (current.right.A.length === 1) current.right.A[0].state = 'highlight'  
-        
-      current.A.forEach((_e, index) => toggleElementVisibility(current, current.id, index))
+      if (current.left.visualizerData.A.length === 1) current.left.visualizerData.A[0].state = 'highlight'
+      if (current.right.visualizerData.A.length === 1) current.right.visualizerData.A[0].state = 'highlight'
+
+      current.visualizerData.A.forEach((_e, index) => toggleElementVisibility(current, current.id, index))
       messages.push('Merge selected arrays back together in sorted order')
       saveStep()
 
-      sort(current.A)
+      sort(current.visualizerData.A)
       let leftNodePointer = 0
       let rightNodePointer = 0
       let finalArrayPointer = 0
-      if (current.left.A.length > 1 || current.right.A.length > 1) {
+      if (current.left.visualizerData.A.length > 1 || current.right.visualizerData.A.length > 1) {
         messages.push('Select the smallest value from the front of each list (excluding values already in the sorted array)')
         saveStep()
       }
-      while (leftNodePointer < current.left.A.length && rightNodePointer < current.right.A.length) {
+      while (leftNodePointer < current.left.visualizerData.A.length && rightNodePointer < current.right.visualizerData.A.length) {
         messages.push('Select the minimum of the two values')
-        if (current.left.A[leftNodePointer].value < current.right.A[rightNodePointer].value) {
+        if (current.left.visualizerData.A[leftNodePointer].value < current.right.visualizerData.A[rightNodePointer].value) {
           merge(current, current.left, leftNodePointer, finalArrayPointer)
           leftNodePointer++
         } else {
@@ -199,13 +188,13 @@ export function generateSteps(root: TreeNodeProp | null) {
         finalArrayPointer++
       }
 
-      while (leftNodePointer < current.left.A.length) {
+      while (leftNodePointer < current.left.visualizerData.A.length) {
         messages.push('When one list becomes empty, copy all values from the remaining array into the sorted array')
         merge(current, current.left, leftNodePointer, finalArrayPointer)
         leftNodePointer++
         finalArrayPointer++
       }
-      while (rightNodePointer < current.right.A.length) {
+      while (rightNodePointer < current.right.visualizerData.A.length) {
         messages.push('When one list becomes empty, copy all values from the remaining array into the sorted array')
         merge(current, current.right, rightNodePointer, finalArrayPointer)
         rightNodePointer++

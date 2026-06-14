@@ -1,38 +1,61 @@
 import clsx from 'clsx'
 import './App.css'
-import {buildTree, generateSteps, type ClassValueProps, type TreeNodeProp} from './simulation/mergesort'
+import {buildTree, generateSteps} from './simulation/mergesort'
 import {Activity, useEffect, useRef, useState, type ChangeEvent} from 'react'
 import Fieldset from './components/Fieldset'
 import NavigationButtons, {type NavigationProps} from './components/NavigationButtons'
 import StepsMessageBox from './components/StepsMessageBox'
 import InputFields, {type InputProps} from './components/InputField'
 import Introduction from './components/Introduction'
+import TreeNode from './components/TreeNode'
+import type {TreeNodeProps, VisualizerDataProps} from './utils/types'
+import Pointer from './components/Pointer'
+import {CELL_SIZE, MERGESORT_STYLES} from './utils/constants'
 
-const MergeSortArray = ({root, classValue}: {root: TreeNodeProp; classValue: ClassValueProps}) => {
+export const VisulaizerArray = ({visualizerData}: {visualizerData: VisualizerDataProps}) => {
+  const {A} = visualizerData
   const {
     cellContainerClass: {highlight, processing, processed},
-    cellClass,
-    animationClass: {show, hidden, transition},
-  } = classValue
+    animationClass: {
+      visibility: {show, hidden},
+      transition,
+    },
+  } = MERGESORT_STYLES
+
+  const getCellState = (state: 'slide' | 'highlight' | 'processing' | 'processed' | undefined) => {
+    switch (state) {
+      case 'highlight':
+        return highlight
+      case 'processing':
+        return processing
+      case 'processed':
+        return processed
+      default:
+        return undefined
+    }
+  }
   return (
     <div className="flex">
-      {root.A.map(({value, elementIndex, visible, state}, index) => {
-        const firstCellBorderClass = index === 0 && `rounded-l-md`
-        const lastCellBorderClass = index === root.A.length - 1 && `rounded-r-md border-r`
-        const cellContainerClass = `flex flex-col border-t border-b border-l border-solid border-neutral-600 ${firstCellBorderClass} ${lastCellBorderClass}`
-        const cellBaseClass = `text-md font-medium size-12 flex justify-center items-center`
-
-        const visibilityClass = visible ? show : hidden
-        const highlightClass = state === 'highlight' && highlight
-        const processingClass = state === 'processing' && processing
-        const processedClass = state === 'processed' && processed
-
+      {A.map(({value, elementIndex, position, visible, state}, index) => {
         return (
-          <div key={elementIndex} className="text-neutral-600 text-center space-y-1">
-            <div className={clsx(cellContainerClass, highlightClass, processingClass, processedClass, transition)}>
-              <span className={clsx(cellBaseClass, cellClass, transition, visibilityClass)}>{value}</span>
+          <div key={elementIndex} className="text-center space-y-1">
+            {visualizerData.low && visualizerData.low.index === index && <Pointer pointer={visualizerData.low} />}
+            {visualizerData.high && visualizerData.high.index === index && <Pointer pointer={visualizerData.high} />}
+            <div
+              className={clsx(
+                `text-neutral-600 size-[${CELL_SIZE}px] border-t border-b border-l border-solid border-neutral-600 ${index === A.length - 1 && 'rounded-r-md border-r'} ${index === 0 && 'rounded-l-md'}`,
+                getCellState(state),
+                transition,
+              )}
+            >
+              <span
+                className={clsx(`text-md font-medium size-full flex justify-center items-center`, transition, visible ? show : hidden)}
+                style={{transform: `translateX(${position}px)`}}
+              >
+                {value}
+              </span>
             </div>
-            <span>{elementIndex}</span>
+            <span className="text-neutral-800">{elementIndex}</span>
           </div>
         )
       })}
@@ -40,23 +63,9 @@ const MergeSortArray = ({root, classValue}: {root: TreeNodeProp; classValue: Cla
   )
 }
 
-const TreeNode = ({root, classValue}: {root: TreeNodeProp | null; classValue: ClassValueProps}) => {
-  if (!root) return null
-
-  return (
-    <div className={`flex flex-col items-center mt-4 transition-opacity duration-400 ${root.visible ? `opacity-100` : `opacity-0`} `}>
-      <MergeSortArray root={root} classValue={classValue} />
-      <div className={`flex gap-10 mt-2`}>
-        <TreeNode root={root.left ?? null} classValue={classValue} />
-        <TreeNode root={root.right ?? null} classValue={classValue} />
-      </div>
-    </div>
-  )
-}
-
 function App() {
-  const [root, setRoot] = useState<TreeNodeProp | null>(null)
-  const [steps, setSteps] = useState<(TreeNodeProp | null)[]>([])
+  const [root, setRoot] = useState<TreeNodeProps | null>(null)
+  const [steps, setSteps] = useState<(TreeNodeProps | null)[]>([])
   const [currentStep, setCurrentStep] = useState<number>(0)
   const [messages, setMessages] = useState<string[]>([])
   const [action, setAction] = useState<'simulation' | 'manual' | 'freeze'>('manual')
@@ -64,13 +73,6 @@ function App() {
   const [arraySize, setArraySize] = useState<number>(5)
   const [inputA, setInputA] = useState<string>('')
   const [A, setA] = useState<number[]>([])
-
-  const defaultClass = {
-    cellContainerClass: {highlight: '', processing: '', processed: ''},
-    cellClass: [],
-    animationClass: {slide: '', show: '', hidden: '', transition: ''},
-  }
-  const [classValue, setClassValue] = useState<ClassValueProps>(defaultClass)
 
   const fieldsetRef = useRef<HTMLDivElement | null>(null)
   const scrollView = () => {
@@ -81,7 +83,6 @@ function App() {
     }
   }
 
-  console.log(steps)
   useEffect(() => {
     if (A.length) {
       const builtTree = buildTree(A)
@@ -92,9 +93,8 @@ function App() {
 
   useEffect(() => {
     if (root) {
-      const {steps, messages, classValues} = generateSteps(root)
+      const {steps, messages} = generateSteps(root)
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setClassValue(classValues)
       setSteps(steps)
       setMessages(messages)
     }
@@ -211,7 +211,7 @@ function App() {
       </Fieldset>
       <Activity mode={A.length ? 'visible' : 'hidden'}>
         <Fieldset label="VISUALIZE">
-          <TreeNode root={steps[currentStep]} classValue={classValue} />
+          <TreeNode root={steps[currentStep]} />
           <StepsMessageBox message={messages[currentStep]} />
           <NavigationButtons simulation={{stepsLength: steps.length, currentStep, action, speed}} controls={controls} />
         </Fieldset>

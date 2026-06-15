@@ -1,29 +1,28 @@
 const Introduction = () => {
   return (
-    <div className="border border-solid border-neutral-400 rounded-sm space-y-4 p-4">
-      <h1 className="text-left text-xl font-medium mb-4">Merge Sort</h1>
-      <p className="text-left font-normal mb-8">
+    <div className="border-b-2 border-solid border-sky-900/50 space-y-4 pb-10 mb-10">
+      <h1 className="text-sky-100 text-left text-3xl font-medium mb-4">Merge Sort</h1>
+      <p className="text-sky-100 text-lg text-left font-normal mb-8">
         Merge sort is a sorting algorithm based on the divide-and-conquer approach. It works by repeatedly splitting the array into smaller halves until each
         part contains only one element. Then, those smaller parts are merged back together in sorted order by comparing their values step by step. This makes
         merge sort easy to visualize, since the algorithm clearly separates the process into two main phases: dividing the array and merging it back into a
         sorted result.
       </p>
-      <div className="flex items-center justify-between px-3 py-2 bg-sky-200/50 border border-solid border-neutral-200 rounded-lg">
+      <div className="flex items-center justify-between px-3 py-2 bg-sky-900/30 border border-solid border-sky-900 rounded-md">
         <div className="flex items-center gap-2 p-2 rounded-sm">
-          <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg" className="size-4">
+          <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg" className="size-4 fill-sky-500">
             <path
               d="M7.49998 0.849976C7.22383 0.849976 6.99998 1.07383 6.99998 1.34998V3.52234C6.99998 3.79848 7.22383 4.02234 7.49998 4.02234C7.77612 4.02234 7.99998 3.79848 7.99998 3.52234V1.8718C10.8862 2.12488 13.15 4.54806 13.15 7.49998C13.15 10.6204 10.6204 13.15 7.49998 13.15C4.37957 13.15 1.84998 10.6204 1.84998 7.49998C1.84998 6.10612 2.35407 4.83128 3.19049 3.8459C3.36919 3.63538 3.34339 3.31985 3.13286 3.14115C2.92234 2.96245 2.60681 2.98825 2.42811 3.19877C1.44405 4.35808 0.849976 5.86029 0.849976 7.49998C0.849976 11.1727 3.82728 14.15 7.49998 14.15C11.1727 14.15 14.15 11.1727 14.15 7.49998C14.15 3.82728 11.1727 0.849976 7.49998 0.849976ZM6.74049 8.08072L4.22363 4.57237C4.15231 4.47295 4.16346 4.33652 4.24998 4.25C4.33649 4.16348 4.47293 4.15233 4.57234 4.22365L8.08069 6.74051C8.56227 7.08599 8.61906 7.78091 8.19998 8.2C7.78089 8.61909 7.08597 8.56229 6.74049 8.08072Z"
-              fill="currentColor"
               fillRule="evenodd"
               clipRule="evenodd"
             ></path>
           </svg>
-          <p className="font-medium">Time complexity: </p>
+          <p className="text-sky-100 font-medium">Time complexity: </p>
         </div>
         <div className="flex gap-4">
-          <p className="text-xs font-medium border border-solid border-neutral-200 rounded-lg bg-white px-2 py-1">Worst O(n log n)</p>
-          <p className="text-xs font-medium border border-solid border-neutral-200 rounded-lg bg-white px-2 py-1">Average O(n log n)</p>
-          <p className="text-xs font-medium border border-solid border-neutral-200 rounded-lg bg-white px-2 py-1">Best O(n log n)</p>
+          <p className="text-xs text-neutral-800 font-medium border border-solid border-neutral-200 rounded-md bg-white px-2 py-1">Worst O(n log n)</p>
+          <p className="text-xs text-neutral-800 font-medium border border-solid border-neutral-200 rounded-md bg-white px-2 py-1">Average O(n log n)</p>
+          <p className="text-xs text-neutral-800 font-medium border border-solid border-neutral-200 rounded-md bg-white px-2 py-1">Best O(n log n)</p>
         </div>
       </div>
     </div>

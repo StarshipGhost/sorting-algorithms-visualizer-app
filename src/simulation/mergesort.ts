@@ -86,25 +86,12 @@ function sort(A: ElementProps[]) {
 }
 
 export function generateSteps(root: TreeNodeProps | null) {
-  const visible = 'opacity-100'
-  const hidden = 'opacity-0'
-  const transitionClass = `transition-[colors, opacity] duration-[400ms,400ms]`
-
-  const highlight = 'text-white bg-green-600/60'
-  const processed = 'bg-yellow-100 text-neutral-600'
-  const processing = 'bg-blue-400/20 text-neutral-600'
-
   const rootCopy: TreeNodeProps | null = root
   const generatedSteps: (TreeNodeProps | null)[] = []
   const messages: string[] = ['']
   const visualizer: VisualizerProps = {
     steps: generatedSteps,
     messages: messages,
-    classValues: {
-      cellContainerClass: {highlight: highlight, processing: processing, processed: processed},
-      cellClass: [],
-      animationClass: {slide: '', visibility: {show: visible, hidden: hidden}, transition: transitionClass},
-    },
   }
 
   const saveStep = () => {

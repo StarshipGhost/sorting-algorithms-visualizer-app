@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import './App.css'
 import {buildTree, generateSteps} from './simulation/mergesort'
-import {Activity, useEffect, useRef, useState, type ChangeEvent} from 'react'
+import { useEffect, useRef, useState, type ChangeEvent} from 'react'
 import Fieldset from './components/Fieldset'
 import NavigationButtons, {type NavigationProps} from './components/NavigationButtons'
 import StepsMessageBox from './components/StepsMessageBox'
@@ -10,9 +10,25 @@ import Introduction from './components/Introduction'
 import TreeNode from './components/TreeNode'
 import type {TreeNodeProps, VisualizerDataProps} from './utils/types'
 import Pointer from './components/Pointer'
-import {CELL_SIZE, MERGESORT_STYLES} from './utils/constants'
+import { MERGESORT_STYLES} from './utils/constants'
+import { twMerge } from 'tailwind-merge'
 
-export const VisulaizerArray = ({visualizerData}: {visualizerData: VisualizerDataProps}) => {
+const NavigationBar = () => {
+  const [active, setActive] = useState<number>(0);
+  return (
+    <div className='p-4'>
+      <h1 className='text-2xl text-neutral-200 border-b-4 border-sky-900/50 font-medium whitespace-nowrap pb-2'>Sorting Algorithms</h1>
+      <ul className='py-4 space-y-2'>
+        <li className={ `text-neutral-400 text-xl font-medium px-4 py-2 rounded-md cursor-pointer hover:text-white hover:bg-neutral-800 whitespace-nowrap ${active === 0 && 'text-white bg-sky-600 hover:bg-sky-600/90'}` } onClick={() => setActive(0)}>Bubble Sort</li>
+        <li className={ `text-neutral-400 text-xl font-medium px-4 py-2 rounded-md cursor-pointer hover:text-white hover:bg-neutral-800 whitespace-nowrap ${active === 1 && 'text-white bg-sky-600 hover:bg-sky-600/90'}` } onClick={() => setActive(1)}>Insertion Sort</li>
+        <li className={ `text-neutral-400 text-xl font-medium px-4 py-2 rounded-md cursor-pointer hover:text-white hover:bg-neutral-800 whitespace-nowrap ${active === 2 && 'text-white bg-sky-600 hover:bg-sky-600/90'}` } onClick={() => setActive(2)}>Selection Sort</li>
+        <li className={ `text-neutral-400 text-xl font-medium px-4 py-2 rounded-md cursor-pointer hover:text-white hover:bg-neutral-800 whitespace-nowrap ${active === 3 && 'text-white bg-sky-600 hover:bg-sky-600/90'}` } onClick={() => setActive(3)}>Merge Sort</li>
+        <li className={ `text-neutral-400 text-xl font-medium px-4 py-2 rounded-md cursor-pointer hover:text-white hover:bg-neutral-800 whitespace-nowrap ${active === 4 && 'text-white bg-sky-600 hover:bg-sky-600/90'}` } onClick={() => setActive(4)}>Quick Sort</li>
+      </ul>
+    </div>
+  )
+}
+export const VisualizerArray = ({visualizerData}: {visualizerData: VisualizerDataProps}) => {
   const {A} = visualizerData
   const {
     cellContainerClass: {highlight, processing, processed},
@@ -42,8 +58,8 @@ export const VisulaizerArray = ({visualizerData}: {visualizerData: VisualizerDat
             {visualizerData.low && visualizerData.low.index === index && <Pointer pointer={visualizerData.low} />}
             {visualizerData.high && visualizerData.high.index === index && <Pointer pointer={visualizerData.high} />}
             <div
-              className={clsx(
-                `text-neutral-600 size-[${CELL_SIZE}px] border-t border-b border-l border-solid border-neutral-600 ${index === A.length - 1 && 'rounded-r-md border-r'} ${index === 0 && 'rounded-l-md'}`,
+              className={twMerge(
+                `text-neutral-300 size-12 border-t border-b border-l border-solid border-sky-100 ${index === A.length - 1 && 'rounded-r-md border-r'} ${index === 0 && 'rounded-l-md'}`,
                 getCellState(state),
                 transition,
               )}
@@ -55,7 +71,7 @@ export const VisulaizerArray = ({visualizerData}: {visualizerData: VisualizerDat
                 {value}
               </span>
             </div>
-            <span className="text-neutral-800">{elementIndex}</span>
+            <span className="text-neutral-300">{elementIndex}</span>
           </div>
         )
       })}
@@ -78,7 +94,7 @@ function App() {
   const scrollView = () => {
     const fieldsets = fieldsetRef.current
     if (fieldsets) {
-      const visualizeFieldset = fieldsets.querySelectorAll('main > div')[2]
+      const visualizeFieldset = fieldsets.querySelectorAll('main > div > div')[3]
       visualizeFieldset.scrollIntoView({behavior: 'smooth', block: 'start'})
     }
   }
@@ -204,18 +220,19 @@ function App() {
   }
 
   return (
-    <main ref={fieldsetRef} className="min-w-80 max-w-5xl mx-auto p-8 space-y-8">
-      <Introduction />
-      <Fieldset label="INPUT">
-        <InputFields input={input} />
-      </Fieldset>
-      <Activity mode={A.length ? 'visible' : 'hidden'}>
+    <main ref={fieldsetRef} className="absolute size-full grid grid-cols-5 p-4">
+      <NavigationBar/>
+      <div className='max-h-screen px-8 py-4 col-span-4 space-y-8 overflow-auto'>
+        <Introduction />
+        <Fieldset label="INPUT">
+          <InputFields input={input} />
+        </Fieldset>
         <Fieldset label="VISUALIZE">
           <TreeNode root={steps[currentStep]} />
           <StepsMessageBox message={messages[currentStep]} />
           <NavigationButtons simulation={{stepsLength: steps.length, currentStep, action, speed}} controls={controls} />
         </Fieldset>
-      </Activity>
+      </div>
     </main>
   )
 }

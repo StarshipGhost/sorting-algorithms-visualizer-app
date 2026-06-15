@@ -1,4 +1,4 @@
-import type {ElementProps, TreeNodeProps, VisualizerProps} from '../utils/types'
+import type {ClassValueProps, ElementProps, TreeNodeProps, VisualizerProps} from '../utils/types'
 
 export function buildTree(A: number[]): TreeNodeProps {
   const elements: ElementProps[] = A.map((value, index) => {
@@ -89,9 +89,15 @@ export function generateSteps(root: TreeNodeProps | null) {
   const rootCopy: TreeNodeProps | null = root
   const generatedSteps: (TreeNodeProps | null)[] = []
   const messages: string[] = ['']
+  const MERGESORT_STYLES : ClassValueProps = {
+  cellContainerClass: {highlight: 'text-white bg-green-600/60', processing: 'bg-blue-400/40 text-white', processed: 'text-white bg-yellow-400/40'},
+  cellClass: [],
+  animationClass: {slide: '', visibility: {show: 'opacity-100', hidden: 'opacity-0'}, transition: 'transition-[colors, opacity] duration-[400ms,400ms]'},
+}
   const visualizer: VisualizerProps = {
     steps: generatedSteps,
     messages: messages,
+    classValues: MERGESORT_STYLES
   }
 
   const saveStep = () => {

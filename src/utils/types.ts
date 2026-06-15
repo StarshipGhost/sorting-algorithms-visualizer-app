@@ -1,3 +1,5 @@
+import type { ChangeEvent } from "react";
+
 export interface ElementProps {
   value: number
   elementIndex: number
@@ -30,11 +32,29 @@ export interface TreeNodeProps {
 export interface ClassValueProps {
   cellContainerClass: {highlight: string; processing: string; processed: string}
   cellClass: string[]
-  animationClass: {slide: string; visibility?: {show: string; hidden: string},  transition: string}
+  animationClass: {slide: string, visibility: {show: string; hidden: string},  transition: string}
 }
 
 export interface VisualizerProps {
   steps: (TreeNodeProps | null)[]
   messages: string[]
-  classValues: ClassValueProps
+  classValues: ClassValueProps;
+}
+
+export interface NavigationProps {
+  simulation: {
+    stepsLength: number
+    currentStep: number
+    action: 'manual' | 'simulation' | 'freeze'
+    speed: number
+  }
+  controls: {
+    onPlay: () => void
+    onPause: () => void
+    onReset: () => void
+    onSpeedChange: (e: ChangeEvent<HTMLInputElement>) => void
+    onStepBack: () => void
+    onStepForward: () => void
+    onSkipToEnd: () => void
+  }
 }

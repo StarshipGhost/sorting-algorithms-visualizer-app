@@ -1,29 +1,13 @@
 import type {ChangeEvent} from 'react'
-import Play from '../icons/Play'
-import DoubleLeftArrow from '../icons/DoubleLeftArrow'
-import DoubleRightArrow from '../icons/DoubleRightArrow'
-import LeftArrow from '../icons/LeftArrow'
-import Pause from '../icons/Pause'
-import RightArrow from '../icons/RightArrow'
+import Play from '../../icons/Play'
+import DoubleLeftArrow from '../../icons/DoubleLeftArrow'
+import DoubleRightArrow from '../../icons/DoubleRightArrow'
+import LeftArrow from '../../icons/LeftArrow'
+import Pause from '../../icons/Pause'
+import RightArrow from '../../icons/RightArrow'
 import SpeedSlider from './SpeedSlider'
+import type { NavigationProps } from '../../utils/types'
 
-export interface NavigationProps {
-  simulation: {
-    stepsLength: number
-    currentStep: number
-    action: 'manual' | 'simulation' | 'freeze'
-    speed: number
-  }
-  controls: {
-    onPlay: () => void
-    onPause: () => void
-    onReset: () => void
-    onSpeedChange: (e: ChangeEvent<HTMLInputElement>) => void
-    onStepBack: () => void
-    onStepForward: () => void
-    onSkipToEnd: () => void
-  }
-}
 const NavigationButtons = ({
   simulation: {stepsLength, currentStep, action, speed},
   controls: {onPlay, onPause, onSpeedChange, onReset, onStepBack, onStepForward, onSkipToEnd},

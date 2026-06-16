@@ -1,5 +1,5 @@
-import { VisualizerArray } from "../../App"
 import type { ClassValueProps, TreeNodeProps } from "../../utils/types"
+import VisualizerArray from "./VisualizerArray"
 
 const TreeNode = ({root, animationStyle}: {root: TreeNodeProps | null, animationStyle: ClassValueProps}) => {
   if (!root) return null

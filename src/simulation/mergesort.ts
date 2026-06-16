@@ -2,7 +2,7 @@ import type {ClassValueProps, ElementProps, TreeNodeProps, VisualizerProps} from
 
 export function buildTree(A: number[]): TreeNodeProps {
   const elements: ElementProps[] = A.map((value, index) => {
-    return {value: value, elementIndex: index, position: 0, visible: true}
+    return {value: value, elementIndex: index, translate: 0, visible: true}
   })
   const root: TreeNodeProps = {id: -1, visualizerData: {A: elements}, left: null, right: null, visible: true}
 
@@ -89,15 +89,15 @@ export function generateSteps(root: TreeNodeProps | null) {
   const rootCopy: TreeNodeProps | null = root
   const generatedSteps: (TreeNodeProps | null)[] = []
   const messages: string[] = ['']
-  const MERGESORT_STYLES : ClassValueProps = {
-  cellContainerClass: {highlight: 'text-white bg-green-600/60', processing: 'bg-blue-400/40 text-white', processed: 'text-white bg-yellow-400/40'},
-  cellClass: [],
-  animationClass: {slide: '', visibility: {show: 'opacity-100', hidden: 'opacity-0'}, transition: 'transition-[colors, opacity] duration-[400ms,400ms]'},
-}
+  const MERGESORT_STYLES: ClassValueProps = {
+    cellContainerClass: {highlight: 'text-white bg-green-400/40', processing: 'bg-blue-400/40 text-white', processed: 'text-white bg-yellow-400/20'},
+    cellClass: [],
+    animationClass: {slide: '', visibility: {show: 'opacity-100', hidden: 'opacity-0'}, transition: 'transition-[colors,opacity] duration-[450ms,450ms]'},
+  }
   const visualizer: VisualizerProps = {
     steps: generatedSteps,
     messages: messages,
-    classValues: MERGESORT_STYLES
+    classValues: MERGESORT_STYLES,
   }
 
   const saveStep = () => {

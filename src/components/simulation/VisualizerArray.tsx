@@ -7,7 +7,7 @@ import {useEffect, useRef, useState} from 'react'
 const VisualizerArray = ({visualizerData, animationStyle}: {visualizerData: VisualizerDataProps; animationStyle: ClassValueProps}) => {
   const {A} = visualizerData
   const {
-    cellContainerClass: { highlight, processing, processed},
+    cellContainerClass: {highlight, processing, processed},
     animationClass: {
       slide,
       visibility: {show, hidden},
@@ -59,7 +59,7 @@ const VisualizerArray = ({visualizerData, animationStyle}: {visualizerData: Visu
 
   const getCellState = (state: 'slide' | 'highlight' | 'processing' | 'processed' | undefined) => {
     switch (state) {
-      case 'slide': 
+      case 'slide':
         return slide
       case 'highlight':
         return highlight
@@ -73,7 +73,7 @@ const VisualizerArray = ({visualizerData, animationStyle}: {visualizerData: Visu
   }
   return (
     <div className="flex">
-      {displayElements.map(({value, elementIndex, position, visible, state}, index) => {
+      {displayElements.map(({value, elementIndex, translate, visible, state}, index) => {
         return (
           <div key={elementIndex} className="text-center space-y-1">
             {visualizerData.low && visualizerData.low.index === index && <Pointer pointer={visualizerData.low} />}
@@ -87,7 +87,7 @@ const VisualizerArray = ({visualizerData, animationStyle}: {visualizerData: Visu
             >
               <span
                 className={clsx(`text-md font-medium size-full flex justify-center items-center`, transition, visible ? show : hidden)}
-                style={{transform: `translateX(${position}px)`}}
+                style={{transform: `translateX(${translate}px)`}}
               >
                 {value}
               </span>

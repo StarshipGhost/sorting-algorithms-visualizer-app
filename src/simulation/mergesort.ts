@@ -1,6 +1,6 @@
 import type {ClassValueProps, ElementProps, TreeNodeProps, VisualizerProps} from '../utils/types'
 
-export function buildTree(A: number[]): TreeNodeProps {
+export function buildMergeSortTree(A: number[]): TreeNodeProps {
   const elements: ElementProps[] = A.map((value, index) => {
     return {value: value, elementIndex: index, translate: 0, visible: true}
   })
@@ -24,7 +24,7 @@ export function buildTree(A: number[]): TreeNodeProps {
     }
   }
 
-  function buildTreeHelper(A: ElementProps[], root: TreeNodeProps): TreeNodeProps | null {
+  function buildMergeSortTreeHelper(A: ElementProps[], root: TreeNodeProps): TreeNodeProps | null {
     if (A.length <= 1) {
       return null
     }
@@ -34,7 +34,7 @@ export function buildTree(A: number[]): TreeNodeProps {
     const right = A.slice(middle)
 
     root.left = {id: -1, visualizerData: {A: structuredClone(left)}, left: null, right: null, visible: false}
-    buildTreeHelper(left, root.left)
+    buildMergeSortTreeHelper(left, root.left)
     root.right = {
       id: -1,
       visualizerData: {A: structuredClone(right)},
@@ -42,12 +42,12 @@ export function buildTree(A: number[]): TreeNodeProps {
       right: null,
       visible: false,
     }
-    buildTreeHelper(right, root.right)
+    buildMergeSortTreeHelper(right, root.right)
 
     return root
   }
 
-  buildTreeHelper(elements, root)
+  buildMergeSortTreeHelper(elements, root)
   generateId(root)
 
   return root
@@ -85,14 +85,15 @@ function sort(A: ElementProps[]) {
   }
 }
 
-export function generateSteps(root: TreeNodeProps | null) {
-  const rootCopy: TreeNodeProps | null = root
+export function generateMergeSortSteps(A: number[]): VisualizerProps {
+  const originalRoot = buildMergeSortTree(A)
+  const rootCopy: TreeNodeProps | null = originalRoot
   const generatedSteps: (TreeNodeProps | null)[] = []
-  const messages: string[] = ['']
+  const messages: string[] = ["Here's a visualization of the entire Mergesort process."]
   const MERGESORT_STYLES: ClassValueProps = {
     cellContainerClass: {highlight: 'text-white bg-green-400/40', processing: 'bg-blue-400/40 text-white', processed: 'text-white bg-yellow-400/20'},
     cellClass: [],
-    animationClass: {slide: '', visibility: {show: 'opacity-100', hidden: 'opacity-0'}, transition: 'transition-[colors,opacity] duration-[450ms,450ms]'},
+    animationClass: {slide: '', visibility: {show: 'opacity-100', hidden: 'opacity-0'}, transition: 'transition-[colors, opacity] duration-[450ms,450ms]'},
   }
   const visualizer: VisualizerProps = {
     steps: generatedSteps,
@@ -101,7 +102,7 @@ export function generateSteps(root: TreeNodeProps | null) {
   }
 
   const saveStep = () => {
-    generatedSteps.push(structuredClone(root))
+    generatedSteps.push(structuredClone(originalRoot))
   }
 
   const select = (node: TreeNodeProps) => {
@@ -144,14 +145,14 @@ export function generateSteps(root: TreeNodeProps | null) {
     node.visualizerData.A[mergedIndex].state = 'processed'
   }
 
-  function generateStepsHelper(current: TreeNodeProps | null) {
+  function generateMergeSortStepsHelper(current: TreeNodeProps | null) {
     if (!current) return
 
     select(current)
     split(current)
 
-    generateStepsHelper(current.left)
-    generateStepsHelper(current.right)
+    generateMergeSortStepsHelper(current.left)
+    generateMergeSortStepsHelper(current.right)
 
     if (current.left && current.right) {
       if (current.left.visualizerData.A.length === 1) current.left.visualizerData.A[0].state = 'highlight'
@@ -202,7 +203,7 @@ export function generateSteps(root: TreeNodeProps | null) {
   }
 
   saveStep()
-  generateStepsHelper(rootCopy)
+  generateMergeSortStepsHelper(rootCopy)
 
   return visualizer
 }

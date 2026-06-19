@@ -1,13 +1,20 @@
-const Introduction = () => {
+import type {SortingAlgorithmProps} from '../utils/types'
+
+const Introduction = ({
+  algorithm: {
+    introduction: {
+      title,
+      description,
+      timeComplexity: {worst, average, best},
+    },
+  },
+}: {
+  algorithm: SortingAlgorithmProps
+}) => {
   return (
     <div className="border-b-2 border-solid border-sky-900/50 space-y-4 pb-10 mb-10">
-      <h1 className="text-sky-100 text-left text-3xl font-medium mb-4">Merge Sort</h1>
-      <p className="text-sky-100 text-lg text-left font-normal mb-8">
-        Merge sort is a sorting algorithm based on the divide-and-conquer approach. It works by repeatedly splitting the array into smaller halves until each
-        part contains only one element. Then, those smaller parts are merged back together in sorted order by comparing their values step by step. This makes
-        merge sort easy to visualize, since the algorithm clearly separates the process into two main phases: dividing the array and merging it back into a
-        sorted result.
-      </p>
+      <h1 className="text-sky-100 text-left text-3xl font-medium mb-4">{title}</h1>
+      <p className="text-sky-100 text-lg text-left font-normal mb-8"> {description} </p>
       <div className="flex items-center justify-between px-3 py-2 bg-sky-900/30 border border-solid border-sky-900 rounded-md">
         <div className="flex items-center gap-2 p-2 rounded-sm">
           <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg" className="size-4 fill-sky-500">
@@ -20,12 +27,13 @@ const Introduction = () => {
           <p className="text-sky-100 font-medium">Time complexity: </p>
         </div>
         <div className="flex gap-4">
-          <p className="text-xs text-neutral-800 font-medium border border-solid border-neutral-200 rounded-md bg-white px-2 py-1">Worst O(n log n)</p>
-          <p className="text-xs text-neutral-800 font-medium border border-solid border-neutral-200 rounded-md bg-white px-2 py-1">Average O(n log n)</p>
-          <p className="text-xs text-neutral-800 font-medium border border-solid border-neutral-200 rounded-md bg-white px-2 py-1">Best O(n log n)</p>
+          <p className="text-xs text-neutral-800 font-medium border border-solid border-neutral-200 rounded-md bg-white px-2 py-1">{`Worst ${worst}`}</p>
+          <p className="text-xs text-neutral-800 font-medium border border-solid border-neutral-200 rounded-md bg-white px-2 py-1">{`Average ${average}`}</p>
+          <p className="text-xs text-neutral-800 font-medium border border-solid border-neutral-200 rounded-md bg-white px-2 py-1">{`Best ${best}`}</p>
         </div>
       </div>
     </div>
   )
 }
+
 export default Introduction

@@ -1,19 +1,34 @@
-import { useState } from "react";
+import {twMerge} from 'tailwind-merge'
+import type {SortingAlgorithmProps} from '../utils/types'
 
-const NavigationBar = () => {
-  const [active, setActive] = useState<number>(0);
+const NavigationBar = ({
+  algorithms,
+  currentId,
+  onIdChange,
+  mode
+}: {
+  algorithms: SortingAlgorithmProps[]
+  currentId: number
+  onIdChange: (id: number) => void
+  mode: 'simulation' | 'manual' | 'freeze'
+}) => {
   return (
-    <div className='p-4'>
-      <h1 className='text-2xl text-neutral-200 border-b-4 border-sky-900/50 font-medium whitespace-nowrap pb-2'>Sorting Algorithms</h1>
-      <ul className='py-4 space-y-2'>
-        <li className={ `text-neutral-400 text-xl font-medium px-4 py-2 rounded-md cursor-pointer hover:text-white hover:bg-neutral-800 whitespace-nowrap ${active === 0 && 'text-white bg-sky-600 hover:bg-sky-600/90'}` } onClick={() => setActive(0)}>Bubble Sort</li>
-        <li className={ `text-neutral-400 text-xl font-medium px-4 py-2 rounded-md cursor-pointer hover:text-white hover:bg-neutral-800 whitespace-nowrap ${active === 1 && 'text-white bg-sky-600 hover:bg-sky-600/90'}` } onClick={() => setActive(1)}>Insertion Sort</li>
-        <li className={ `text-neutral-400 text-xl font-medium px-4 py-2 rounded-md cursor-pointer hover:text-white hover:bg-neutral-800 whitespace-nowrap ${active === 2 && 'text-white bg-sky-600 hover:bg-sky-600/90'}` } onClick={() => setActive(2)}>Selection Sort</li>
-        <li className={ `text-neutral-400 text-xl font-medium px-4 py-2 rounded-md cursor-pointer hover:text-white hover:bg-neutral-800 whitespace-nowrap ${active === 3 && 'text-white bg-sky-600 hover:bg-sky-600/90'}` } onClick={() => setActive(3)}>Merge Sort</li>
-        <li className={ `text-neutral-400 text-xl font-medium px-4 py-2 rounded-md cursor-pointer hover:text-white hover:bg-neutral-800 whitespace-nowrap ${active === 4 && 'text-white bg-sky-600 hover:bg-sky-600/90'}` } onClick={() => setActive(4)}>Quick Sort</li>
+    <div className="p-4">
+      <h1 className="text-xl text-neutral-200 border-b-4 border-sky-900/50 whitespace-nowrap pb-2">Sorting Algorithms</h1>
+      <ul className="py-4 space-y-2">
+        {algorithms.map(({id, introduction: {title}}) => (
+          <li
+            key={title}
+            className={twMerge(`text-neutral-400 text-md font-medium px-4 py-2 rounded-sm cursor-pointer hover:text-white hover:bg-neutral-800 whitespace-nowrap`, `${currentId === id && 'text-white bg-sky-600 hover:bg-sky-600/90'}`, `${mode === 'simulation' && 'brightness-50 pointer-events-none cursor-default'}`)}
+            onClick={() => onIdChange(id)}
+            aria-disabled={mode === 'simulation'}
+          >
+            {title}
+          </li>
+        ))}
       </ul>
     </div>
   )
 }
 
-export default NavigationBar;
+export default NavigationBar

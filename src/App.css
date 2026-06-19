@@ -1,1 +1,23 @@
-@import "tailwindcss"
+@import "tailwindcss";
+
+@theme {
+    --animate-slide: slide 650ms linear;
+    --animate-processed: processed 2s linear forwards;
+}
+
+@keyframes slide {
+    0%, 25%, 50%, 75% {
+        background-color: theme(color-orange-500 / 0.4);
+    }
+}
+
+@keyframes processed {
+    0%, 25%, 50% {
+        background-color: theme(color-yellow-400 / 0.8);
+        color: theme(color-white);
+    }
+
+    75%, 100% {
+        background-color: theme(color-yellow-400 / 0.2);
+    }
+}

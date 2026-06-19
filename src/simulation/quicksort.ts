@@ -30,7 +30,7 @@ function partition(A: ElementProps[], low: number, high: number): number {
   return i
 }
 
-export function buildQuickSortTree(A: number[]): TreeNodeProps | null {
+function buildQuickSortTree(A: number[]): TreeNodeProps | null {
   const elements = A.map((element, index) => {
     return {value: element, elementIndex: index, translate: 0, visible: true, state: undefined}
   })
@@ -100,7 +100,7 @@ function mutateArray(current: TreeNodeProps | null, id: number, i: number, j: nu
 }
 
 export function generateQuickSortSteps(A: number[]): VisualizerProps {
-  const originalRoot = buildQuickSortTree(A)
+  const originalRoot: TreeNodeProps | null = buildQuickSortTree(A)
   const rootCopy: TreeNodeProps | null = originalRoot
   const generatedSteps: (TreeNodeProps | null)[] = []
   const messages: string[] = ["Here's a visualization of the entire Quicksort process."]
@@ -124,14 +124,13 @@ export function generateQuickSortSteps(A: number[]): VisualizerProps {
     if (!current) return
 
     const {A, low, high} = current.visualizerData
-    current.visible = true
 
     let i = 0
     let j = A.length - 2
 
     if (j < i) {
       A[i].state = 'processed'
-      messages.push('The current sublist contains a single element which means it is sorted')
+      messages.push('The current sublist contains a single element which means it is sorted.')
       saveStep()
       return
     }
@@ -141,7 +140,7 @@ export function generateQuickSortSteps(A: number[]): VisualizerProps {
       const mid = Math.floor((i + end) / 2)
       A[mid].state = 'processing'
       saveStep()
-      messages.push('Select the pivot')
+      messages.push('Select the pivot.')
       mutateArray(originalRoot, current.id, A[mid].elementIndex, A[end].elementIndex)
       A[mid].state = undefined
       A[end].state = 'processing'
@@ -202,8 +201,18 @@ export function generateQuickSortSteps(A: number[]): VisualizerProps {
       saveStep()
       messages.push('Move the pivot the its final location.')
     }
-    generateQuickSortStepsHelper(current.left)
-    generateQuickSortStepsHelper(current.right)
+    if (current.left) {
+      messages.push('We call quicksort on the left sublist.')
+      current.left.visible = true
+      saveStep()
+      generateQuickSortStepsHelper(current.left)
+    }
+    if (current.right) {
+      messages.push('We call quicksort on the right sublist.')
+      current.right.visible = true
+      saveStep()
+      generateQuickSortStepsHelper(current.right)
+    }
   }
 
   if (originalRoot) originalRoot.visible = true

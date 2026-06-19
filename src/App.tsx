@@ -1,17 +1,18 @@
 import './App.css'
-import {buildTree, generateSteps} from './simulation/mergesort'
-import { useEffect, useRef, useState, type ChangeEvent} from 'react'
+import {Activity, useEffect, useRef, useState, type ChangeEvent} from 'react'
 import Fieldset from './components/Fieldset'
 import NavigationButtons from './components/simulation/NavigationButtons'
 import StepsMessageBox from './components/simulation/StepsMessageBox'
 import InputFields, {type InputProps} from './components/InputField'
 import Introduction from './components/Introduction'
 import TreeNode from './components/simulation/TreeNode'
-import type {ClassValueProps, NavigationProps, TreeNodeProps} from './utils/types'
+import {type SortingAlgorithmProps, type ClassValueProps, type NavigationProps, type TreeNodeProps} from './utils/types'
 import NavigationBar from './components/NavigationBar'
+import {generateQuickSortSteps} from './simulation/quicksort'
+import {generateMergeSortSteps} from './simulation/mergesort'
+import {mergesortIntroduction, quicksortIntroduction} from './utils/constants'
 
 function App() {
-  const [root, setRoot] = useState<TreeNodeProps | null>(null)
   const [steps, setSteps] = useState<(TreeNodeProps | null)[]>([])
   const [currentStep, setCurrentStep] = useState<number>(0)
   const [messages, setMessages] = useState<string[]>([])
@@ -25,6 +26,9 @@ function App() {
     cellClass: [],
     animationClass: {slide: '', visibility: {show: '', hidden: ''}, transition: ''},
   })
+  const [algorithms, setAlgorithms] = useState<SortingAlgorithmProps[]>([])
+  const [currentId, setCurrentId] = useState<number>(-1)
+  const [currentAlgorithm, setCurrentAlgorithm] = useState<SortingAlgorithmProps | undefined>()
 
   const fieldsetRef = useRef<HTMLDivElement | null>(null)
   const scrollView = () => {
@@ -36,22 +40,30 @@ function App() {
   }
 
   useEffect(() => {
-    if (A.length) {
-      const builtTree = buildTree(A)
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setRoot(builtTree)
-    }
-  }, [A])
+    const algos = [
+      {id: 1, introduction: mergesortIntroduction, generateSteps: generateMergeSortSteps},
+      {id: 2, introduction: quicksortIntroduction, generateSteps: generateQuickSortSteps},
+    ]
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setAlgorithms(algos)
+  }, [])
 
   useEffect(() => {
-    if (root) {
-      const {steps, messages, classValues} = generateSteps(root)
+    // eslint-disable-next-line react-hooks/immutability
+    handleResetInput()
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setCurrentAlgorithm(algorithms.find((algo) => currentId === algo.id))
+  }, [algorithms, currentId])
+
+  useEffect(() => {
+    if (currentAlgorithm && A.length) {
+      const {steps, messages, classValues} = currentAlgorithm.generateSteps(A)
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setSteps(steps)
       setMessages(messages)
-      setClassValues(classValues);
+      setClassValues(classValues)
     }
-  }, [root])
+  }, [A, currentAlgorithm])
 
   useEffect(() => {
     if (A.length) {
@@ -144,9 +156,9 @@ function App() {
   const handleResetInput = () => {
     setA([])
     setInputA('')
-    setRoot(null)
     setCurrentStep(0)
     setSteps([])
+    setMessages([])
   }
 
   const input: InputProps = {
@@ -158,17 +170,19 @@ function App() {
 
   return (
     <main ref={fieldsetRef} className="absolute size-full grid grid-cols-5 pl-4 py-4">
-      <NavigationBar/>
-      <div className='max-h-screen px-8 py-4 col-span-4 space-y-8 overflow-auto'>
-        <Introduction />
+      <NavigationBar mode={action} algorithms={algorithms} currentId={currentId} onIdChange={(id: number) => setCurrentId(id)} />
+      <div className="max-h-screen px-8 py-4 col-span-4 space-y-8 overflow-y-auto">
+        {currentAlgorithm && <Introduction algorithm={currentAlgorithm} />}
         <Fieldset label="INPUT">
           <InputFields input={input} />
         </Fieldset>
-        <Fieldset label="VISUALIZE">
-          <TreeNode root={steps[currentStep]} animationStyle={classValues}/>
-          <StepsMessageBox message={messages[currentStep]} />
-          <NavigationButtons simulation={{stepsLength: steps.length, currentStep, action, speed}} controls={controls} />
-        </Fieldset>
+        <Activity mode={currentAlgorithm ? 'visible' : 'hidden'}>
+          <Fieldset label="VISUALIZE">
+            <TreeNode root={steps[currentStep]} animationStyle={classValues} />
+            <StepsMessageBox message={messages[currentStep]} />
+            <NavigationButtons simulation={{stepsLength: steps.length, currentStep, action, speed}} controls={controls} />
+          </Fieldset>
+        </Activity>
       </div>
     </main>
   )

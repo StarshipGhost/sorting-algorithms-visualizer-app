@@ -1,6 +1,6 @@
 import type {ClassValueProps, ElementProps, TreeNodeProps, VisualizerProps} from '../utils/types'
 
-export function buildMergeSortTree(A: number[]): TreeNodeProps {
+function buildMergeSortTree(A: number[]): TreeNodeProps {
   const elements: ElementProps[] = A.map((value, index) => {
     return {value: value, elementIndex: index, translate: 0, visible: true}
   })
@@ -86,7 +86,7 @@ function sort(A: ElementProps[]) {
 }
 
 export function generateMergeSortSteps(A: number[]): VisualizerProps {
-  const originalRoot = buildMergeSortTree(A)
+  const originalRoot: TreeNodeProps | null = buildMergeSortTree(A)
   const rootCopy: TreeNodeProps | null = originalRoot
   const generatedSteps: (TreeNodeProps | null)[] = []
   const messages: string[] = ["Here's a visualization of the entire Mergesort process."]

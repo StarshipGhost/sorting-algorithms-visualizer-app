@@ -1,7 +1,6 @@
 import {twMerge} from 'tailwind-merge'
 import type {ClassValueProps, ElementProps, VisualizerDataProps} from '../../utils/types'
 import Pointer from './Pointer'
-import clsx from 'clsx'
 import {useEffect, useRef, useState} from 'react'
 
 const VisualizerArray = ({visualizerData, animationStyle}: {visualizerData: VisualizerDataProps; animationStyle: ClassValueProps}) => {
@@ -16,12 +15,15 @@ const VisualizerArray = ({visualizerData, animationStyle}: {visualizerData: Visu
   } = animationStyle
 
   function findSwappedIndices(prev: ElementProps[], next: ElementProps[]): [number, number] | null {
-    const changed = prev.reduce<number[]>((acc, el, i) => {
-      if (el.value !== next[i].value) acc.push(i)
-      return acc
-    }, [])
+    if (prev.length === next.length) {
+      const changed = prev.reduce<number[]>((acc, el, i) => {
+        if (el && next[i] && el.value !== next[i].value) acc.push(i)
+        return acc
+      }, [])
 
-    if (changed.length === 2) return [changed[0], changed[1]]
+      if (changed.length === 2) return [changed[0], changed[1]]
+    }
+
     return null
   }
 
@@ -74,10 +76,11 @@ const VisualizerArray = ({visualizerData, animationStyle}: {visualizerData: Visu
   return (
     <div className="flex">
       {displayElements.map(({value, elementIndex, translate, visible, state}, index) => {
+        const slideTransition = state === 'slide' && 'animate-slide transition-[transform,colors] duration-[450ms,450ms]'
         return (
           <div key={elementIndex} className="text-center space-y-1">
-            {visualizerData.low && visualizerData.low.index === index && <Pointer pointer={visualizerData.low} />}
-            {visualizerData.high && visualizerData.high.index === index && <Pointer pointer={visualizerData.high} />}
+            {visualizerData.low && visualizerData.low.index === elementIndex && <Pointer pointer={visualizerData.low} />}
+            {visualizerData.high && visualizerData.high.index === elementIndex && <Pointer pointer={visualizerData.high} />}
             <div
               className={twMerge(
                 `text-neutral-300 size-12 border-t border-b border-l border-solid border-sky-100 ${index === A.length - 1 && 'rounded-r-md border-r'} ${index === 0 && 'rounded-l-md'}`,
@@ -86,9 +89,10 @@ const VisualizerArray = ({visualizerData, animationStyle}: {visualizerData: Visu
               )}
             >
               <span
-                className={clsx(`text-md font-medium size-full flex justify-center items-center`, transition, visible ? show : hidden)}
+                className={twMerge(`text-md font-medium size-full flex justify-center items-center`, transition, slideTransition, visible ? show : hidden)}
                 style={{transform: `translateX(${translate}px)`}}
               >
+                {' '}
                 {value}
               </span>
             </div>

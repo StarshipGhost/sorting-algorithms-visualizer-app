@@ -1,4 +1,4 @@
-import type {PointerProps} from '../utils/types'
+import type {PointerProps} from '../../utils/types'
 
 const Pointer = ({pointer}: {pointer: PointerProps}) => {
   return (

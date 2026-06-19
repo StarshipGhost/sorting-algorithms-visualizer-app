@@ -1,5 +1,15 @@
 import type {ChangeEvent} from 'react'
 
+export interface SortingAlgorithmProps {
+  id: number
+  introduction: {
+    title: string
+    description: string
+    timeComplexity: {worst: string; average: string; best: string}
+  }
+  generateSteps: (A: number[]) => VisualizerProps
+}
+
 export interface ElementProps {
   value: number
   elementIndex: number

@@ -10,13 +10,16 @@ import {type SortingAlgorithmProps, type ClassValueProps, type NavigationProps, 
 import NavigationBar from './components/NavigationBar'
 import {generateQuickSortSteps} from './simulation/quicksort'
 import {generateMergeSortSteps} from './simulation/mergesort'
-import {mergesortIntroduction, quicksortIntroduction} from './utils/constants'
+import {bubblesortIntroduction, insertionsortIntroduction, mergesortIntroduction, quicksortIntroduction, selectionsortIntroduction} from './utils/constants'
+import {generateInsertionSortSteps} from './simulation/insertionsort'
+import {generateBubbleSortSteps} from './simulation/bubblesort'
+import {generateSelectionSortSteps} from './simulation/selectionsorts'
 
 function App() {
   const [steps, setSteps] = useState<(TreeNodeProps | null)[]>([])
   const [currentStep, setCurrentStep] = useState<number>(0)
   const [messages, setMessages] = useState<string[]>([])
-  const [action, setAction] = useState<'simulation' | 'manual' | 'freeze'>('manual')
+  const [action, setAction] = useState<'simulation' | 'manual'>('manual')
   const [speed, setSpeed] = useState<number>(500)
   const [arraySize, setArraySize] = useState<number>(5)
   const [inputA, setInputA] = useState<string>('')
@@ -43,6 +46,9 @@ function App() {
     const algos = [
       {id: 1, introduction: mergesortIntroduction, generateSteps: generateMergeSortSteps},
       {id: 2, introduction: quicksortIntroduction, generateSteps: generateQuickSortSteps},
+      {id: 3, introduction: insertionsortIntroduction, generateSteps: generateInsertionSortSteps},
+      {id: 4, introduction: bubblesortIntroduction, generateSteps: generateBubbleSortSteps},
+      {id: 5, introduction: selectionsortIntroduction, generateSteps: generateSelectionSortSteps},
     ]
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setAlgorithms(algos)
@@ -81,7 +87,7 @@ function App() {
       }, speed)
     } else {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setAction('freeze')
+      setAction('manual')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentStep])
@@ -171,10 +177,10 @@ function App() {
   return (
     <main ref={fieldsetRef} className="absolute size-full grid grid-cols-5 pl-4 py-4">
       <NavigationBar mode={action} algorithms={algorithms} currentId={currentId} onIdChange={(id: number) => setCurrentId(id)} />
-      <div className="max-h-screen px-8 py-4 col-span-4 space-y-8 overflow-y-auto">
+      <div className="px-8 py-4 col-span-4 space-y-8 overflow-y-auto">
         {currentAlgorithm && <Introduction algorithm={currentAlgorithm} />}
         <Fieldset label="INPUT">
-          <InputFields input={input} />
+          <InputFields input={input} active={!!currentAlgorithm} />
         </Fieldset>
         <Activity mode={currentAlgorithm ? 'visible' : 'hidden'}>
           <Fieldset label="VISUALIZE">

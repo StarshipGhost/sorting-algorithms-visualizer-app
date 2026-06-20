@@ -219,6 +219,8 @@ export function generateQuickSortSteps(A: number[]): VisualizerProps {
 
   saveStep()
   generateQuickSortStepsHelper(rootCopy)
+  saveStep();
+  messages.push('Done sorting!')
 
   return visualizer
 }

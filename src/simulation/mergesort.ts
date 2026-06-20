@@ -159,7 +159,7 @@ export function generateMergeSortSteps(A: number[]): VisualizerProps {
       if (current.right.visualizerData.A.length === 1) current.right.visualizerData.A[0].state = 'highlight'
 
       current.visualizerData.A.forEach((_e, index) => toggleElementVisibility(current, current.id, index))
-      messages.push('Merge selected arrays back together in sorted order')
+      messages.push('Merge selected arrays back together in sorted order.')
       saveStep()
 
       sort(current.visualizerData.A)
@@ -167,11 +167,11 @@ export function generateMergeSortSteps(A: number[]): VisualizerProps {
       let rightNodePointer = 0
       let finalArrayPointer = 0
       if (current.left.visualizerData.A.length > 1 || current.right.visualizerData.A.length > 1) {
-        messages.push('Select the smallest value from the front of each list (excluding values already in the sorted array)')
+        messages.push('Select the smallest value from the front of each list (excluding values already in the sorted array).')
         saveStep()
       }
       while (leftNodePointer < current.left.visualizerData.A.length && rightNodePointer < current.right.visualizerData.A.length) {
-        messages.push('Select the minimum of the two values')
+        messages.push('Select the minimum of the two values.')
         if (current.left.visualizerData.A[leftNodePointer].value < current.right.visualizerData.A[rightNodePointer].value) {
           merge(current, current.left, leftNodePointer, finalArrayPointer)
           leftNodePointer++
@@ -183,13 +183,13 @@ export function generateMergeSortSteps(A: number[]): VisualizerProps {
       }
 
       while (leftNodePointer < current.left.visualizerData.A.length) {
-        messages.push('When one list becomes empty, copy all values from the remaining array into the sorted array')
+        messages.push('When one list becomes empty, copy all values from the remaining array into the sorted array.')
         merge(current, current.left, leftNodePointer, finalArrayPointer)
         leftNodePointer++
         finalArrayPointer++
       }
       while (rightNodePointer < current.right.visualizerData.A.length) {
-        messages.push('When one list becomes empty, copy all values from the remaining array into the sorted array')
+        messages.push('When one list becomes empty, copy all values from the remaining array into the sorted array.')
         merge(current, current.right, rightNodePointer, finalArrayPointer)
         rightNodePointer++
         finalArrayPointer++
@@ -204,6 +204,8 @@ export function generateMergeSortSteps(A: number[]): VisualizerProps {
 
   saveStep()
   generateMergeSortStepsHelper(rootCopy)
+  saveStep();
+  messages.push('Done sorting!')
 
   return visualizer
 }

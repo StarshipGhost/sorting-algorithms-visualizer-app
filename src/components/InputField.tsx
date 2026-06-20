@@ -1,21 +1,40 @@
-import type {ChangeEvent} from 'react'
+import type { ChangeEvent } from "react";
 
 export interface InputProps {
-    sizeSelect: {currentSize: number; onSizeChange: (e : ChangeEvent<HTMLSelectElement>) => void}
-    customArrayInput: {currentInputValues: string; onInputChange: (e : ChangeEvent<HTMLInputElement>) => void}
-    onSubmit: (e : React.SubmitEvent<HTMLFormElement>) => void
-    onReset: () => void
+  sizeSelect: {
+    currentSize: number;
+    onSizeChange: (e: ChangeEvent<HTMLSelectElement>) => void;
+  };
+  customArrayInput: {
+    currentInputValues: string;
+    onInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  };
+  onSubmit: (e: React.SubmitEvent<HTMLFormElement>) => void;
+  onReset: () => void;
 }
 
-const InputFields = ({input : {sizeSelect: {currentSize, onSizeChange}, customArrayInput: {currentInputValues, onInputChange}, onSubmit, onReset}}: {input : InputProps}) => {
-  const arraySizeOptions = [5, 6, 7, 8, 9, 10]
+const InputFields = ({
+  input: {
+    sizeSelect: { currentSize, onSizeChange },
+    customArrayInput: { currentInputValues, onInputChange },
+    onSubmit,
+    onReset,
+  },
+  active,
+}: {
+  input: InputProps;
+  active: boolean;
+}) => {
+  const arraySizeOptions = [5, 6, 7, 8, 9, 10];
 
   return (
     <form className="grid grid-cols-2 gap-y-4 px-4 py-8" onSubmit={onSubmit}>
       <label className="text-sky-500 font-medium" htmlFor="size"> Array size: </label>
-      <select className="text-sky-100 text-sm bg-neutral-800 border border-solid border-sky-300 p-1 rounded-sm w-1/4 shadow-sm" id="size" value={currentSize} onChange={onSizeChange} >
+      <select className="text-sky-100 text-sm bg-neutral-800 border border-solid border-sky-300 p-1 rounded-sm w-1/4 shadow-sm" id="size" value={currentSize} onChange={onSizeChange}>
         {arraySizeOptions.map((size) => (
-          <option className="select:bg-neutral-800" key={size} value={size}> {size} </option>
+          <option className="select:bg-neutral-800" key={size} value={size}>
+            {size}
+          </option>
         ))}
       </select>
       <label className="text-sky-500 font-medium" htmlFor="values"> Array values <span className="text-sky-600">(optional): </span> </label>
@@ -28,11 +47,11 @@ const InputFields = ({input : {sizeSelect: {currentSize, onSizeChange}, customAr
         placeholder="Type multiple array values using comma separate"
       ></input>
       <div className="col-start-2 space-x-8 self-center place-content-center">
-        <button type="submit" className="text-sm text-white w-16 h-8 bg-sky-800 border border-solid border-sky-700 rounded-sm cursor-pointer hover:bg-sky-900"> Run </button>
-        <a className="text-md text-sky-500 cursor-pointer hover:underline" onClick={onReset}>Reset</a>
+        <button type="submit" className="text-sm text-white w-16 h-8 bg-sky-800 border border-solid border-sky-700 rounded-sm cursor-pointer hover:bg-sky-900 disabled:opacity-50 disabled:pointer-events-none" disabled={!active} > Run </button>
+        <a className="text-md text-sky-500 cursor-pointer hover:underline" onClick={onReset}> Reset </a>
       </div>
     </form>
-  )
-}
+  );
+};
 
-export default InputFields
+export default InputFields;

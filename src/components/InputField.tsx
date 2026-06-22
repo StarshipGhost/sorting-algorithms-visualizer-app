@@ -30,7 +30,7 @@ const InputFields = ({
   return (
     <form className="grid grid-cols-2 gap-y-4 px-4 py-8" onSubmit={onSubmit}>
       <label className="text-sky-500 font-medium" htmlFor="size"> Array size: </label>
-      <select className="text-sky-100 text-sm bg-neutral-800 border border-solid border-sky-300 p-1 rounded-sm w-1/4 shadow-sm" id="size" value={currentSize} onChange={onSizeChange}>
+      <select className="text-sky-100 text-sm bg-neutral-800 border border-solid border-sky-300 p-1 rounded-sm w-1/4 shadow-sm cursor-pointer" id="size" value={currentSize} onChange={onSizeChange}>
         {arraySizeOptions.map((size) => (
           <option className="select:bg-neutral-800" key={size} value={size}>
             {size}

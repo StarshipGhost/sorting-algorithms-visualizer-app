@@ -48,7 +48,7 @@ const InputFields = ({
       ></input>
       <div className="col-start-2 space-x-8 self-center place-content-center">
         <button type="submit" className="text-sm text-white w-16 h-8 bg-sky-800 border border-solid border-sky-700 rounded-sm cursor-pointer hover:bg-sky-900 disabled:opacity-50 disabled:pointer-events-none" disabled={!active} > Run </button>
-        <a className="text-md text-sky-500 cursor-pointer hover:underline" onClick={onReset}> Reset </a>
+        <a className="inline-block text-md text-sky-500 cursor-pointer hover:underline" onClick={onReset}> Reset </a>
       </div>
     </form>
   );

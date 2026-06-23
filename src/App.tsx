@@ -10,7 +10,7 @@ import {type SortingAlgorithmProps, type ClassValueProps, type NavigationProps, 
 import NavigationBar from './components/NavigationBar'
 import {generateQuickSortSteps} from './simulation/quicksort'
 import {generateMergeSortSteps} from './simulation/mergesort'
-import {bubblesortIntroduction, insertionsortIntroduction, mergesortIntroduction, quicksortIntroduction, selectionsortIntroduction} from './utils/constants'
+import {bubblesortIntroduction, bubblesortLengthRange, insertionsortIntroduction, insertionsortLengthRange, mergesortIntroduction, mergesortLengthRange, quicksortIntroduction, quicksortLengthRange, selectionsortIntroduction, selectionsortLengthRange} from './utils/constants'
 import {generateInsertionSortSteps} from './simulation/insertionsort'
 import {generateBubbleSortSteps} from './simulation/bubblesort'
 import {generateSelectionSortSteps} from './simulation/selectionsorts'
@@ -46,11 +46,11 @@ function App() {
 
   useEffect(() => {
     const algos = [
-      {id: 1, introduction: mergesortIntroduction, generateSteps: generateMergeSortSteps},
-      {id: 2, introduction: quicksortIntroduction, generateSteps: generateQuickSortSteps},
-      {id: 3, introduction: insertionsortIntroduction, generateSteps: generateInsertionSortSteps},
-      {id: 4, introduction: bubblesortIntroduction, generateSteps: generateBubbleSortSteps},
-      {id: 5, introduction: selectionsortIntroduction, generateSteps: generateSelectionSortSteps},
+      {id: 1, introduction: mergesortIntroduction, lengthRange: mergesortLengthRange, generateSteps: generateMergeSortSteps},
+      {id: 2, introduction: quicksortIntroduction, lengthRange: quicksortLengthRange, generateSteps: generateQuickSortSteps},
+      {id: 3, introduction: insertionsortIntroduction, lengthRange: insertionsortLengthRange, generateSteps: generateInsertionSortSteps},
+      {id: 4, introduction: bubblesortIntroduction, lengthRange: bubblesortLengthRange, generateSteps: generateBubbleSortSteps},
+      {id: 5, introduction: selectionsortIntroduction, lengthRange: selectionsortLengthRange, generateSteps: generateSelectionSortSteps},
     ]
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setAlgorithms(algos)
@@ -61,7 +61,8 @@ function App() {
     handleResetInput()
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setCurrentAlgorithm(algorithms.find((algo) => algo.id === currentId))
-  }, [algorithms, currentId])
+    setArraySize(currentAlgorithm ? currentAlgorithm.lengthRange[0] : -1)
+  }, [algorithms, currentAlgorithm, currentId])
 
   useEffect(() => {
     if (currentAlgorithm && A.length) {
@@ -144,21 +145,24 @@ function App() {
     const regex: RegExp = /[a-zA-Z\W]/
     let submittedArray
 
-    setCurrentStep(0)
-    if (inputA.trim().length) {
-      submittedArray = inputA
-        .split(regex)
-        .filter((c) => c.length)
-        .map((n) => parseInt(n))
-      const outOfBoundNumber = submittedArray.find((element) => element > 999)
-      if (submittedArray.length < 5 || submittedArray.length > 10 || outOfBoundNumber) {
-        window.alert('Please enter 5 to 10 positive integers between 0 and 999')
-        return
+    if (currentAlgorithm) {
+      const [min, max] = currentAlgorithm.lengthRange
+      setCurrentStep(0)
+      if (inputA.trim().length) {
+        submittedArray = inputA
+          .split(regex)
+          .filter((c) => c.length)
+          .map((n) => parseInt(n))
+        const outOfBoundNumber = submittedArray.find((element) => element > 999)
+        if (submittedArray.length < min || submittedArray.length > max || outOfBoundNumber) {
+          window.alert(`Please enter ${min} to ${max} positive integers between 0 and 999`)
+          return
+        }
+      } else {
+        submittedArray = Array.from({length: arraySize}, () => Math.floor(Math.random() * 999) + 1)
       }
-    } else {
-      submittedArray = Array.from({length: arraySize}, () => Math.floor(Math.random() * 999) + 1)
+      setA(submittedArray)
     }
-    setA(submittedArray)
   }
 
   const handleResetInput = () => {
@@ -183,7 +187,7 @@ function App() {
       <div className=" col-start-1 lg:col-start-2 col-span-5 lg:col-span-4 space-y-8 p-6">
         {currentAlgorithm && <Introduction algorithm={currentAlgorithm} />}
         <Fieldset label="INPUT">
-          <InputFields input={input} active={!!currentAlgorithm} />
+          <InputFields input={input} lengthRange={currentAlgorithm ? currentAlgorithm.lengthRange : [0, 0]} active={!!currentAlgorithm} />
         </Fieldset>
         <MobileNavigationBarTrigger algorithm={currentAlgorithm} openDrawer={() => setDrawer(true)}/>
         <Activity mode={currentAlgorithm ? 'visible' : 'hidden'}>

@@ -7,6 +7,8 @@ export const mergesortIntroduction: SortingAlgorithmProps['introduction'] = {
   timeComplexity: {worst: 'O(n log n)', average: 'O(n log n)', best: 'O(n log n)'},
 }
 
+export const mergesortLengthRange: SortingAlgorithmProps['lengthRange'] = [4, 8]
+
 export const quicksortIntroduction: SortingAlgorithmProps['introduction'] = {
   title: 'Quick Sort',
   description:
@@ -14,12 +16,16 @@ export const quicksortIntroduction: SortingAlgorithmProps['introduction'] = {
   timeComplexity: {worst: 'O(n²)', average: 'O(n log n)', best: 'O(n log n)'},
 }
 
+export const quicksortLengthRange: SortingAlgorithmProps['lengthRange'] = [4, 8]
+
 export const insertionsortIntroduction: SortingAlgorithmProps['introduction'] = {
   title: 'Insertion Sort',
   description:
     'Insertion sort builds the sorted array one element at a time. Starting from the second element, it compares the current value with the elements before it and inserts it into its correct position within the already sorted portion of the array. This process is repeated until all elements have been placed in order. The algorithm resembles the way many people sort a hand of playing cards.',
-  timeComplexity: {worst: 'O(n²)', average: 'O(n²)', best: 'O(n²)'},
+  timeComplexity: {worst: 'O(n)', average: 'O(n²)', best: 'O(n²)'},
 }
+
+export const insertionsortLengthRange: SortingAlgorithmProps['lengthRange'] = [6, 12]
 
 export const selectionsortIntroduction: SortingAlgorithmProps['introduction'] = {
   title: 'Selection Sort',
@@ -28,11 +34,15 @@ export const selectionsortIntroduction: SortingAlgorithmProps['introduction'] = 
   timeComplexity: {worst: 'O(n²)', average: 'O(n²)', best: 'O(n²)'},
 }
 
+export const selectionsortLengthRange: SortingAlgorithmProps['lengthRange'] = [6, 12]
+
 export const bubblesortIntroduction: SortingAlgorithmProps['introduction'] = {
   title: 'Bubble sort',
   description:
     'Bubble sort repeatedly compares adjacent elements and swaps them whenever they are in the wrong order. As the algorithm progresses, larger values "bubble" toward the end of the array while smaller values move toward the beginning. The process continues until no more swaps are needed, indicating that the array is fully sorted. Its step-by-step swapping behavior makes it one of the most intuitive sorting algorithms to visualize.',
-  timeComplexity: {worst: 'O(n²)', average: 'O(n²)', best: 'O(n²)'},
+  timeComplexity: {worst: 'O(n)', average: 'O(n²)', best: 'O(n²)'},
 }
+
+export const bubblesortLengthRange: SortingAlgorithmProps['lengthRange'] = [6, 12]
 
 export const CELL_SIZE = 48 //in px

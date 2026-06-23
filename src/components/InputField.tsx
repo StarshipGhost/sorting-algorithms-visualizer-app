@@ -1,4 +1,4 @@
-import type { ChangeEvent } from "react";
+import { type ChangeEvent } from "react";
 
 export interface InputProps {
   sizeSelect: {
@@ -14,6 +14,7 @@ export interface InputProps {
 }
 
 const InputFields = ({
+  lengthRange,
   input: {
     sizeSelect: { currentSize, onSizeChange },
     customArrayInput: { currentInputValues, onInputChange },
@@ -22,10 +23,12 @@ const InputFields = ({
   },
   active,
 }: {
+  lengthRange: [number, number] 
   input: InputProps;
   active: boolean;
 }) => {
-  const arraySizeOptions = [5, 6, 7, 8, 9, 10];
+  const [min, max] = lengthRange
+  const arraySizeOptions = Array.from({length: (max - min) + 1}, (_e : number, i : number) => min + i)
 
   return (
     <form className="grid grid-cols-2 gap-y-4 px-4 py-8" onSubmit={onSubmit}>

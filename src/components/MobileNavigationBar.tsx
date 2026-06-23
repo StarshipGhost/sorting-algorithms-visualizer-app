@@ -27,7 +27,7 @@ const MobileNavigationBar = ({
   const [drawerHeight, setDrawerHeight] = useState<number>(0)
   useEffect(() => {
     const drawer = drawerRef.current
-    function mouseDownHandler(e: MouseEvent) {
+    function mouseDownHandler(e: PointerEvent) {
       e.preventDefault()
       if (drawer && drawer.contains(e.target as Node)) {
         setIsDown(true)
@@ -40,7 +40,7 @@ const MobileNavigationBar = ({
       }
     }
 
-    function mouseUpHandler(e: MouseEvent) {
+    function mouseUpHandler(e: PointerEvent) {
       e.preventDefault()
       setIsDown(false)
       if (drawer) {
@@ -55,38 +55,42 @@ const MobileNavigationBar = ({
       }
     }
 
-    function mouseLeaveHandler(e: MouseEvent) {
+    function mouseLeaveHandler(e: PointerEvent) {
       e.preventDefault()
       setIsOut(true)
     }
-    function mouseEnterHandler(e: MouseEvent) {
+    function mouseEnterHandler(e: PointerEvent) {
       e.preventDefault()
       setIsOut(false)
     }
 
-    function mouseMoveHandler(e: MouseEvent) {
-      e.preventDefault()
+    function mouseMoveHandler(e: PointerEvent) {
       if (drawer && isDown) {
         setDistance(e.clientY - originClick)
       }
     }
 
     if (drawer && active && drawerUp) {
-      setDrawerHeight(drawer.clientHeight)
-      window.addEventListener('mousedown', mouseDownHandler)
-      window.addEventListener('mouseup', mouseUpHandler)
-      drawer.addEventListener('mousemove', mouseMoveHandler)
-      drawer.addEventListener('mouseleave', mouseLeaveHandler)
-      drawer.addEventListener('mouseenter', mouseEnterHandler)
+      window.addEventListener('pointerdown', mouseDownHandler)
+      window.addEventListener('pointerup', mouseUpHandler)
+      drawer.addEventListener('pointermove', mouseMoveHandler)
+      drawer.addEventListener('pointerleave', mouseLeaveHandler)
+      drawer.addEventListener('pointerenter', mouseEnterHandler)
     }
     return () => {
-      window.removeEventListener('mousedown', mouseDownHandler)
-      window.removeEventListener('mouseup', mouseUpHandler)
-      drawer?.removeEventListener('mousemove', mouseMoveHandler)
-      drawer?.removeEventListener('mouseleave', mouseLeaveHandler)
-      drawer?.removeEventListener('mouseenter', mouseEnterHandler)
+      window.removeEventListener('pointerdown', mouseDownHandler)
+      window.removeEventListener('pointerup', mouseUpHandler)
+      drawer?.removeEventListener('pointermove', mouseMoveHandler)
+      drawer?.removeEventListener('pointerleave', mouseLeaveHandler)
+      drawer?.removeEventListener('pointerenter', mouseEnterHandler)
     }
   }, [drawerRef, isDown, originClick, distance, closeDrawer, drawerHeight, active, drawerUp, isOut])
+
+  useEffect(() => {
+    if (drawerRef.current) {
+      setDrawerHeight(drawerRef.current.clientHeight)
+    }
+  }, [active])
 
   useEffect(() => {
     if (active) {
@@ -113,7 +117,7 @@ const MobileNavigationBar = ({
       <div
         ref={drawerRef}
         className={twMerge(
-          `lg:hidden absolute z-3 left-0 bottom-0 bg-black w-full px-6 pt-4 pb-2 border-t border-solid border-sky-900 rounded-t-2xl`,
+          `touch-none lg:hidden absolute z-3 left-0 bottom-0 bg-black w-full px-6 pt-4 pb-2 border-t border-solid border-sky-900 rounded-t-2xl`,
           `${isDown ? 'transition-none' : 'transition-transform duration-300'} ${drawerUp ? 'translate-y-0' : 'translate-y-full'}`,
         )}
         style={{transform: `translateY(${distance > 0 ? distance : Math.max(-15, distance / 3)}px)`}}

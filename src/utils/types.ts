@@ -7,6 +7,7 @@ export interface SortingAlgorithmProps {
     description: string
     timeComplexity: {worst: string; average: string; best: string}
   }
+  lengthRange: [number, number]
   generateSteps: (A: number[]) => VisualizerProps
 }
 
@@ -41,7 +42,6 @@ export interface TreeNodeProps {
 
 export interface ClassValueProps {
   cellContainerClass: {highlight: string; processing: string; processed: string}
-  cellClass: string[]
   animationClass: {slide: string; visibility: {show: string; hidden: string}; transition: string}
 }
 

@@ -14,6 +14,8 @@ import {bubblesortIntroduction, insertionsortIntroduction, mergesortIntroduction
 import {generateInsertionSortSteps} from './simulation/insertionsort'
 import {generateBubbleSortSteps} from './simulation/bubblesort'
 import {generateSelectionSortSteps} from './simulation/selectionsorts'
+import MobileNavigationBar from './components/MobileNavigationBar'
+import MobileNavigationBarTrigger from './components/MobileNavigationBarTrigger'
 
 function App() {
   const [steps, setSteps] = useState<(TreeNodeProps | null)[]>([])
@@ -26,12 +28,12 @@ function App() {
   const [A, setA] = useState<number[]>([])
   const [classValues, setClassValues] = useState<ClassValueProps>({
     cellContainerClass: {highlight: '', processing: '', processed: ''},
-    cellClass: [],
     animationClass: {slide: '', visibility: {show: '', hidden: ''}, transition: ''},
   })
   const [algorithms, setAlgorithms] = useState<SortingAlgorithmProps[]>([])
-  const [currentId, setCurrentId] = useState<number>(-1)
+  const [currentId, setCurrentId] = useState<number>(1)
   const [currentAlgorithm, setCurrentAlgorithm] = useState<SortingAlgorithmProps | undefined>()
+  const [drawer, setDrawer] = useState<boolean>(false)
 
   const fieldsetRef = useRef<HTMLDivElement | null>(null)
   const scrollView = () => {
@@ -58,7 +60,7 @@ function App() {
     // eslint-disable-next-line react-hooks/immutability
     handleResetInput()
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setCurrentAlgorithm(algorithms.find((algo) => currentId === algo.id))
+    setCurrentAlgorithm(algorithms.find((algo) => algo.id === currentId))
   }, [algorithms, currentId])
 
   useEffect(() => {
@@ -149,8 +151,8 @@ function App() {
         .filter((c) => c.length)
         .map((n) => parseInt(n))
       const outOfBoundNumber = submittedArray.find((element) => element > 999)
-      if (submittedArray.length < 5 || submittedArray.length > 8 || outOfBoundNumber) {
-        window.alert('Please enter 5 to 8 positive integers between 0 and 999')
+      if (submittedArray.length < 5 || submittedArray.length > 10 || outOfBoundNumber) {
+        window.alert('Please enter 5 to 10 positive integers between 0 and 999')
         return
       }
     } else {
@@ -175,13 +177,15 @@ function App() {
   }
 
   return (
-    <main ref={fieldsetRef} className="absolute size-full grid grid-cols-5 pl-4 py-4">
-      <NavigationBar mode={action} algorithms={algorithms} currentId={currentId} onIdChange={(id: number) => setCurrentId(id)} />
-      <div className="px-8 py-4 col-span-4 space-y-8 overflow-y-auto">
+    <main ref={fieldsetRef} className="min-w-[320px] grid grid-cols-5">
+      <MobileNavigationBar active={drawer} mode={action} algorithms={algorithms} currentId={currentId} onIdChange={(id: number) => setCurrentId(id)} closeDrawer={() => setDrawer(false)} />
+      <NavigationBar mode={action} algorithms={algorithms} currentId={currentId} onIdChange={(id: number) =>  setCurrentId(id)} />
+      <div className=" col-start-1 lg:col-start-2 col-span-5 lg:col-span-4 space-y-8 p-6">
         {currentAlgorithm && <Introduction algorithm={currentAlgorithm} />}
         <Fieldset label="INPUT">
           <InputFields input={input} active={!!currentAlgorithm} />
         </Fieldset>
+        <MobileNavigationBarTrigger algorithm={currentAlgorithm} openDrawer={() => setDrawer(true)}/>
         <Activity mode={currentAlgorithm ? 'visible' : 'hidden'}>
           <Fieldset label="VISUALIZE">
             <TreeNode root={steps[currentStep]} animationStyle={classValues} />

@@ -1,3 +1,4 @@
+import { generateId } from '../utils/generateId'
 import type {ClassValueProps, ElementProps, TreeNodeProps, VisualizerProps} from '../utils/types'
 
 function buildMergeSortTree(A: number[]): TreeNodeProps {
@@ -5,24 +6,6 @@ function buildMergeSortTree(A: number[]): TreeNodeProps {
     return {value: value, elementIndex: index, translate: 0, visible: true}
   })
   const root: TreeNodeProps = {id: -1, visualizerData: {A: elements}, left: null, right: null, visible: true}
-
-  const generateId = (root: TreeNodeProps | null) => {
-    const queue: (TreeNodeProps | null)[] = [root]
-    let id = 1
-
-    while (queue.length > 0) {
-      const node: TreeNodeProps | null | undefined = queue.shift()
-      if (node) {
-        node.id = id++
-        if (node.left) {
-          queue.push(node.left)
-        }
-        if (node.right) {
-          queue.push(node.right)
-        }
-      }
-    }
-  }
 
   function buildMergeSortTreeHelper(A: ElementProps[], root: TreeNodeProps): TreeNodeProps | null {
     if (A.length <= 1) {
@@ -92,7 +75,6 @@ export function generateMergeSortSteps(A: number[]): VisualizerProps {
   const messages: string[] = ["Here's a visualization of the entire Mergesort process."]
   const MERGESORT_STYLES: ClassValueProps = {
     cellContainerClass: {highlight: 'text-white bg-green-400/40', processing: 'bg-blue-400/40 text-white', processed: 'text-white bg-yellow-400/20'},
-    cellClass: [],
     animationClass: {slide: '', visibility: {show: 'opacity-100', hidden: 'opacity-0'}, transition: 'transition-[colors, opacity] duration-[450ms,450ms]'},
   }
   const visualizer: VisualizerProps = {

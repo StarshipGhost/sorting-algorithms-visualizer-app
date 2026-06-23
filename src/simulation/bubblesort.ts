@@ -1,4 +1,5 @@
-import type { ClassValueProps, ElementProps, TreeNodeProps, VisualizerProps } from "../utils/types";
+import { swap } from "../utils/swap";
+import type { ClassValueProps, TreeNodeProps, VisualizerProps } from "../utils/types";
 
 const buildBubbleSortTree = (A: number[]): TreeNodeProps => {
   const elements = A.map((element, index) => {
@@ -13,7 +14,6 @@ export function generateBubbleSortSteps(A: number[]) {
   const messages: string[] = ["Here's a visualization of the entire Bubble sort process."];
   const BUBBLESORT_STYLES: ClassValueProps = {
     cellContainerClass: { highlight: "text-white bg-green-400/40", processing: "text-white bg-blue-400/40", processed: "animate-processed" },
-    cellClass: [],
     animationClass: { slide: "animate-slide", visibility: { show: "opacity-100", hidden: "opacity-0" }, transition: "transition-colors duration-450" },
   };
   const visualizer: VisualizerProps = {
@@ -25,12 +25,6 @@ export function generateBubbleSortSteps(A: number[]) {
   const saveStep = () => {
     generatedSteps.push(structuredClone(root));
   };
-
-  function swap(elements: ElementProps[], i: number, j: number) {
-    const tempValue = elements[i].value;
-    elements[i] = { ...elements[i], value: elements[j].value };
-    elements[j] = { ...elements[j], value: tempValue };
-  }
 
   function generateBubbleSortStepsHelper(current: TreeNodeProps | null) {
     if (!current) return;

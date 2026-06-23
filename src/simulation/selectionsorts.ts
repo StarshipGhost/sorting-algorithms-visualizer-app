@@ -1,4 +1,5 @@
-import type { ClassValueProps, ElementProps, TreeNodeProps, VisualizerProps } from "../utils/types";
+import { swap } from "../utils/swap";
+import type { ClassValueProps, TreeNodeProps, VisualizerProps } from "../utils/types";
 
 const buildSelectionSortTree = (A: number[]): TreeNodeProps => {
   const elements = A.map((element, index) => {
@@ -13,7 +14,6 @@ export function generateSelectionSortSteps(A: number[]) {
   const messages: string[] = ["Here's a visualization of the entire Selection sort process."];
   const SELECTIONSORT_STYLES: ClassValueProps = {
     cellContainerClass: { highlight: "text-white bg-green-400/40", processing: "text-white bg-blue-400/40", processed: "animate-processed" },
-    cellClass: [],
     animationClass: { slide: "animate-slide", visibility: { show: "opacity-100", hidden: "opacity-0" }, transition: "transition-colors duration-450" },
   };
   const visualizer: VisualizerProps = {
@@ -26,12 +26,6 @@ export function generateSelectionSortSteps(A: number[]) {
     generatedSteps.push(structuredClone(root));
   };
 
-  function swap(elements: ElementProps[], i: number, j: number) {
-    const tempValue = elements[i].value;
-    elements[i] = { ...elements[i], value: elements[j].value };
-    elements[j] = { ...elements[j], value: tempValue };
-  }
-
   function generateSelectionSortStepsHelper(current: TreeNodeProps | null) {
     if (!current) return;
 
@@ -41,7 +35,7 @@ export function generateSelectionSortSteps(A: number[]) {
     messages.push("For each pass, we will move left to right looking for the next smallest value. Once that is found, it will swapped into its final position (these will be shown in yellow).");
 
     let x = -1;
-    for (let i = 0; i < A.length; i++) {
+    for (let i = 0; i < A.length - 1; i++) {
       let min = A[i].value;
       let minIndex = i;
       saveStep();
@@ -70,12 +64,13 @@ export function generateSelectionSortSteps(A: number[]) {
       saveStep();
       messages.push("Now swap the next smallest element into place.");
       swap(A, i, minIndex);
-      A[x].state = undefined;
+      A[x].state = A[x].state === "highlight" ? undefined : "processed";
       A[i].state = "processed";
       saveStep();
       messages.push("Done this pass.");
     }
 
+    A[A.length - 1].state = "processed"
     saveStep();
     messages.push("Done sorting!");
   }

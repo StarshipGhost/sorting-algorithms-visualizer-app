@@ -1,3 +1,4 @@
+import { generateId } from '../utils/generateId'
 import type {ClassValueProps, ElementProps, TreeNodeProps, VisualizerProps} from '../utils/types'
 
 function swap(elements: ElementProps[], i: number, j: number) {
@@ -35,25 +36,6 @@ function buildQuickSortTree(A: number[]): TreeNodeProps | null {
     return {value: element, elementIndex: index, translate: 0, visible: true, state: undefined}
   })
 
-  const generateId = (current: TreeNodeProps | null) => {
-    let id = 1
-
-    const queue = []
-    queue.push(current)
-
-    while (queue.length > 0) {
-      const node: TreeNodeProps | null | undefined = queue.shift()
-      if (node) {
-        node.id = id++
-        if (node.left) {
-          queue.push(node.left)
-        }
-        if (node.right) {
-          queue.push(node.right)
-        }
-      }
-    }
-  }
   function buildQuickSortTreeHelper(elements: ElementProps[], root: TreeNodeProps | null, low: number, high: number): TreeNodeProps | null {
     if (low > high) return null
 
@@ -106,7 +88,6 @@ export function generateQuickSortSteps(A: number[]): VisualizerProps {
   const messages: string[] = ["Here's a visualization of the entire Quicksort process."]
   const QUICKSORT_STYLES: ClassValueProps = {
     cellContainerClass: {highlight: 'text-white bg-green-400/40', processing: 'text-white bg-blue-400/40', processed: 'animate-processed'},
-    cellClass: [],
     animationClass: {slide: 'animate-slide', visibility: {show: 'opacity-100', hidden: 'opacity-0'}, transition: 'transition-colors duration-450'},
   }
 
@@ -199,7 +180,7 @@ export function generateQuickSortSteps(A: number[]): VisualizerProps {
       A[i].state = 'processed'
       low.visible = false
       saveStep()
-      messages.push('Move the pivot the its final location.')
+      messages.push('Move the pivot to its final location.')
     }
     if (current.left) {
       messages.push('We call quicksort on the left sublist.')

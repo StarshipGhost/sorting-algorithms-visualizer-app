@@ -189,7 +189,7 @@ function App() {
         <Fieldset label="INPUT">
           <InputFields input={input} lengthRange={currentAlgorithm ? currentAlgorithm.lengthRange : [0, 0]} active={!!currentAlgorithm} />
         </Fieldset>
-        <MobileNavigationBarTrigger algorithm={currentAlgorithm} openDrawer={() => setDrawer(true)}/>
+        <MobileNavigationBarTrigger mode={action} algorithm={currentAlgorithm} openDrawer={() => setDrawer(true)}/>
         <Activity mode={currentAlgorithm ? 'visible' : 'hidden'}>
           <Fieldset label="VISUALIZE">
             <TreeNode root={steps[currentStep]} animationStyle={classValues} />

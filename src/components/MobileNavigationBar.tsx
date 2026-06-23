@@ -32,7 +32,7 @@ const MobileNavigationBar = ({
       if (drawer && drawer.contains(e.target as Node)) {
         setIsDown(true)
         setOriginClick(e.clientY)
-      } else if (active && drawerUp && isOut) {
+      } else {
         setDrawerUp(false)
         setTimeout(() => {
           closeDrawer()
@@ -59,6 +59,7 @@ const MobileNavigationBar = ({
       e.preventDefault()
       setIsOut(true)
     }
+
     function mouseEnterHandler(e: PointerEvent) {
       e.preventDefault()
       setIsOut(false)

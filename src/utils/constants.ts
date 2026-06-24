@@ -37,7 +37,7 @@ export const selectionsortIntroduction: SortingAlgorithmProps['introduction'] = 
 export const selectionsortLengthRange: SortingAlgorithmProps['lengthRange'] = [6, 12]
 
 export const bubblesortIntroduction: SortingAlgorithmProps['introduction'] = {
-  title: 'Bubble sort',
+  title: 'Bubble Sort',
   description:
     'Bubble sort repeatedly compares adjacent elements and swaps them whenever they are in the wrong order. As the algorithm progresses, larger values "bubble" toward the end of the array while smaller values move toward the beginning. The process continues until no more swaps are needed, indicating that the array is fully sorted. Its step-by-step swapping behavior makes it one of the most intuitive sorting algorithms to visualize.',
   timeComplexity: {worst: 'O(n)', average: 'O(n²)', best: 'O(n²)'},

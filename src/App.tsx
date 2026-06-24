@@ -39,7 +39,7 @@ function App() {
   const scrollView = () => {
     const fieldsets = fieldsetRef.current
     if (fieldsets) {
-      const visualizeFieldset = fieldsets.querySelectorAll('main > div > div')[2]
+      const visualizeFieldset = fieldsets.querySelectorAll('main > div > div')[5]
       visualizeFieldset.scrollIntoView({behavior: 'smooth', block: 'start'})
     }
   }

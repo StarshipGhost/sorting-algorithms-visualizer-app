@@ -13,7 +13,7 @@ const Introduction = ({
 }) => {
   return (
     <div className="border-b-2 border-solid border-sky-900/50 space-y-4 pb-8 mb-10">
-      <h1 className="text-sky-100 text-left text-2xl lg:text-3xl font-medium mb-6">{title}</h1>
+      <h1 className="text-sky-100 text-left text-2xl lg:text-3xl font-medium mb-4">{title}</h1>
       <p className="text-sky-100 text-md lg:text-lg text-justify font-normal mb-8"> {description} </p>
       <div className="flex items-center justify-between px-3 py-2 bg-sky-900/30 border border-solid border-sky-900 rounded-md">
         <div className="flex items-center gap-2 p-2 rounded-sm">

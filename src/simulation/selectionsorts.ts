@@ -32,7 +32,7 @@ export function generateSelectionSortSteps(A: number[]) {
     const { A } = current.visualizerData;
 
     saveStep();
-    messages.push("For each pass, we will move left to right looking for the next smallest value. Once that is found, it will swapped into its final position (these will be shown in yellow).");
+    messages.push("For each pass, we will move left to right looking for the next smallest value. Once that is found, it will be swapped into its final position (these will be shown in yellow).");
 
     let x = -1;
     for (let i = 0; i < A.length - 1; i++) {

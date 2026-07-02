@@ -46,11 +46,11 @@ function App() {
 
   useEffect(() => {
     const algos = [
-      {id: 1, introduction: mergesortIntroduction, lengthRange: mergesortLengthRange, generateSteps: generateMergeSortSteps},
-      {id: 2, introduction: quicksortIntroduction, lengthRange: quicksortLengthRange, generateSteps: generateQuickSortSteps},
-      {id: 3, introduction: insertionsortIntroduction, lengthRange: insertionsortLengthRange, generateSteps: generateInsertionSortSteps},
-      {id: 4, introduction: bubblesortIntroduction, lengthRange: bubblesortLengthRange, generateSteps: generateBubbleSortSteps},
-      {id: 5, introduction: selectionsortIntroduction, lengthRange: selectionsortLengthRange, generateSteps: generateSelectionSortSteps},
+      {id: 1, introduction: selectionsortIntroduction, lengthRange: selectionsortLengthRange, generateSteps: generateSelectionSortSteps},
+      {id: 2, introduction: insertionsortIntroduction, lengthRange: insertionsortLengthRange, generateSteps: generateInsertionSortSteps},
+      {id: 3, introduction: bubblesortIntroduction, lengthRange: bubblesortLengthRange, generateSteps: generateBubbleSortSteps},
+      {id: 4, introduction: quicksortIntroduction, lengthRange: quicksortLengthRange, generateSteps: generateQuickSortSteps},
+      {id: 5, introduction: mergesortIntroduction, lengthRange: mergesortLengthRange, generateSteps: generateMergeSortSteps},
     ]
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setAlgorithms(algos)

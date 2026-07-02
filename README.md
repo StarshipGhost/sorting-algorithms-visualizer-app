@@ -1,73 +1,42 @@
-# React + TypeScript + Vite
+# Sorting Algorithms Visualizer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a visualizer web application that demonstrates how popular sorting algorithms operate through smooth, step-by-step animations. Users can generate custom datasets, control playback, adjust animation speed, and inspect each algorithm's behavior in detail. Built with React, TypeScript, and Tailwind CSS,
 
-Currently, two official plugins are available:
+## Demo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The live demo of the application is available [<u>here</u>](https://starshipghost.github.io/sorting-algorithms-visualizer-app/).
 
-## React Compiler
+<video controls>
+  <source src="./public/Demo.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Features
 
-## Expanding the ESLint configuration
+- **Algorithm Visualizations**: Currently supports the following sorting algorithms: 
+  - Selection sort
+  - Insertion sort
+  - Bubble sort
+  - Quick sort
+  - Merge sort
+- **Interactive Playback Controls**: Play, pause, step forward, step backwards and reset the visualization at any time.
+- **Step-by-Step Visualization**: Navigate through each recorded sorting step, allowing users to analyze every comparison and swap.
+- **Random Dataset Generation**: Instantly generate new arrays to observe how algorithms behave with different inputs.
+- **Customizable Settings**: Users can adjust the speed of the visualization, the size of the array. 
+- **Smooth Animations**: Visual cues and transitions clearly illustrate comparisons, swaps, and element movement.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Built With
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **React**: Builds the user interface using reusable components and managed the application's state throughout the visualization.
+- **Vite**: Provides a fast development environment with instant hot module replacement and optimized production builds.
+- **TypeScript**: Adds static type checking to improve code reliability, maintainability, and developer experience.
+- **Tailwind CSS**: Used to create a responsive and modern interface with utility-first styling and smooth transitions.
+- **CSS Transitions & Transforms**: Powers the animations that visually represent comparisons, swaps, and element movement during sorting.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Usage
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+1. **Choose an algorithm** from the algorithm selector in the side bar.
+2. **Generate a random dataset** or create your own.
+3. **Start the visualization** to watch the algorithm sort the array.
+4. **Control the playback** by pausing, resetting, or moving forward and backward one step at a time.
+5. **Adjust the animation speed** to observe the algorithm more closely or speed up the visualization.

@@ -52,22 +52,6 @@ function toggleElementVisibility(node: TreeNodeProps | null, id: number, index: 
   }
 }
 
-function sort(A: ElementProps[]) {
-  function swap(i: number, j: number) {
-    const temp = A[i].value
-    A[i].value = A[j].value
-    A[j].value = temp
-  }
-
-  for (let i = 1; i < A.length; i++) {
-    for (let j = i; j > 0; j--) {
-      if (A[j - 1].value > A[j].value) {
-        swap(j - 1, j)
-      }
-    }
-  }
-}
-
 export function generateMergeSortSteps(A: number[]): VisualizerProps {
   const originalRoot: TreeNodeProps | null = buildMergeSortTree(A)
   const rootCopy: TreeNodeProps | null = originalRoot
@@ -116,6 +100,7 @@ export function generateMergeSortSteps(A: number[]): VisualizerProps {
     messages.push('Add the selected value to the sorted array')
     child.visualizerData.A[index].state = undefined
     toggleElementVisibility(child, child.id, index)
+    node.visualizerData.A[mergedIndex].value = child.visualizerData.A[index].value;
     node.visualizerData.A[mergedIndex].state = 'processing'
     toggleElementVisibility(node, node.id, mergedIndex)
     saveStep()
@@ -144,7 +129,6 @@ export function generateMergeSortSteps(A: number[]): VisualizerProps {
       messages.push('Merge selected arrays back together in sorted order.')
       saveStep()
 
-      sort(current.visualizerData.A)
       let leftNodePointer = 0
       let rightNodePointer = 0
       let finalArrayPointer = 0

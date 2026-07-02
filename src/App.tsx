@@ -184,10 +184,10 @@ function App() {
     <main ref={fieldsetRef} className="min-w-[320px] grid grid-cols-5">
       <MobileNavigationBar active={drawer} mode={action} algorithms={algorithms} currentId={currentId} onIdChange={(id: number) => setCurrentId(id)} closeDrawer={() => setDrawer(false)} />
       <NavigationBar mode={action} algorithms={algorithms} currentId={currentId} onIdChange={(id: number) =>  setCurrentId(id)} />
-      <div className=" col-start-1 lg:col-start-2 col-span-5 lg:col-span-4 space-y-8 p-6">
+      <div className="col-start-1 lg:col-start-2 col-span-5 lg:col-span-4 space-y-8 p-6 pb-3">
         {currentAlgorithm && <Introduction algorithm={currentAlgorithm} />}
         <Fieldset label="INPUT">
-          <InputFields input={input} lengthRange={currentAlgorithm ? currentAlgorithm.lengthRange : [0, 0]} active={!!currentAlgorithm} />
+          <InputFields input={input} lengthRange={currentAlgorithm ? currentAlgorithm.lengthRange : [0, 0]} active={!!currentAlgorithm && action !== 'simulation'} />
         </Fieldset>
         <MobileNavigationBarTrigger mode={action} algorithm={currentAlgorithm} openDrawer={() => setDrawer(true)}/>
         <Activity mode={currentAlgorithm ? 'visible' : 'hidden'}>

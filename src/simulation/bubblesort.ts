@@ -31,7 +31,7 @@ export function generateBubbleSortSteps(A: number[]) {
 
     const { A } = current.visualizerData;
     saveStep();
-    messages.push("For each pass will move left to right swapping adjacent elements as needed. Each pass moves the next largest element into its final position (these will be shown as green).");
+    messages.push("For each pass, we will move left to right swapping adjacent elements as needed. Each pass moves the next largest element into its final position (these will be shown in yellow).");
 
     for (let i = 0; i < A.length - 1; i++) {
       saveStep();
@@ -39,7 +39,6 @@ export function generateBubbleSortSteps(A: number[]) {
       saveStep();
       messages.push("For each element moving through the list.");
       for (let j = 0; j < A.length - i - 1; j++) {
-        console.log("hello");
         A[j].state = "processing";
         A[j + 1].state = "processing";
         saveStep();
@@ -51,12 +50,12 @@ export function generateBubbleSortSteps(A: number[]) {
         }
         A[j].state = undefined;
       }
-      A[A.length - i - 1].state = "highlight";
+      A[A.length - i - 1].state = "processed";
       saveStep();
       messages.push("Done this pass. The last element processed is now in its final position.");
     }
 
-    A.forEach((e) => (e.state = "processed"));
+    A[0].state = "processed"
     saveStep();
     messages.push("Done sorting!");
   }

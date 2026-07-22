@@ -1,4 +1,4 @@
-import { type ChangeEvent } from "react";
+import { type ChangeEvent, type SubmitEvent } from "react";
 
 export interface InputProps {
   sizeSelect: {
@@ -9,7 +9,7 @@ export interface InputProps {
     currentInputValues: string;
     onInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
   };
-  onSubmit: (e: React.SubmitEvent<HTMLFormElement>) => void;
+  onSubmit: (e: SubmitEvent<HTMLFormElement>) => void;
   onReset: () => void;
 }
 

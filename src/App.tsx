@@ -1,7 +1,6 @@
 import './App.css'
 import {Activity, useEffect, useRef, useState, type ChangeEvent} from 'react'
 import Fieldset from './components/Fieldset'
-import NavigationButtons from './components/simulation/NavigationButtons'
 import StepsMessageBox from './components/simulation/StepsMessageBox'
 import InputFields, {type InputProps} from './components/InputField'
 import Introduction from './components/Introduction'
@@ -16,6 +15,7 @@ import {generateBubbleSortSteps} from './simulation/bubblesort'
 import {generateSelectionSortSteps} from './simulation/selectionsorts'
 import MobileNavigationBar from './components/MobileNavigationBar'
 import MobileNavigationBarTrigger from './components/MobileNavigationBarTrigger'
+import Controls from './components/simulation/Controls'
 
 function App() {
   const [steps, setSteps] = useState<(TreeNodeProps | null)[]>([])
@@ -194,7 +194,7 @@ function App() {
           <Fieldset label="VISUALIZE">
             <TreeNode root={steps[currentStep]} animationStyle={classValues} />
             <StepsMessageBox message={messages[currentStep]} />
-            <NavigationButtons simulation={{stepsLength: steps.length, currentStep, action, speed}} controls={controls} />
+            <Controls simulation={{stepsLength: steps.length, currentStep, action, speed}} controls={controls} mode={action} />
           </Fieldset>
         </Activity>
       </div>

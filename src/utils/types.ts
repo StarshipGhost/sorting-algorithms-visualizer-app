@@ -67,4 +67,5 @@ export interface NavigationProps {
     onStepForward: () => void
     onSkipToEnd: () => void
   }
+  mode: 'manual' | 'simulation'
 }
